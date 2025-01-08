@@ -10,6 +10,8 @@ public class GridGenerator : MonoBehaviour
 
     public List<GameObject> TargetGroupList => targetGroupList; // Public read-only access to the list
 
+    private bool isGridGenerated = false; // Flag to track grid generation
+
     public void GenerateGrid()
     {
         if (cubePrefab == null)
@@ -18,19 +20,24 @@ public class GridGenerator : MonoBehaviour
             return;
         }
 
-        ClearGrid(); // Clear existing grid before generating a new one
-
-        for (int x = 0; x < gridSize; x++)
+        // Only generate grid if not already generated
+        if (!isGridGenerated)
         {
-            for (int z = 0; z < gridSize; z++)
-            {
-                Vector3 position = new Vector3(x * spacing, 0, z * spacing);
-                GameObject cube = Lean.Pool.LeanPool.Spawn(cubePrefab, position, Quaternion.identity, transform);
-                targetGroupList.Add(cube); // Add each cube to the list
-            }
-        }
+            ClearGrid(); // Clear existing grid before generating a new one
 
-        Debug.Log($"{gridSize * gridSize} cubes generated.");
+            for (int x = 0; x < gridSize; x++)
+            {
+                for (int z = 0; z < gridSize; z++)
+                {
+                    Vector3 position = new Vector3(x * spacing, 0, z * spacing);
+                    GameObject cube = Lean.Pool.LeanPool.Spawn(cubePrefab, position, Quaternion.identity, transform);
+                    targetGroupList.Add(cube); // Add each cube to the list
+                }
+            }
+
+            isGridGenerated = true; // Mark grid as generated
+            Debug.Log($"{gridSize * gridSize} cubes generated.");
+        }
     }
 
     public void ClearGrid()
@@ -43,6 +50,7 @@ public class GridGenerator : MonoBehaviour
             }
         }
         targetGroupList.Clear(); // Clear the list
+        isGridGenerated = false; // Reset grid generation flag
         Debug.Log("Grid cleared.");
     }
 
