@@ -488,7 +488,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 3600933413957533853, guid: 111de594a4844ed48a69bc610eecdac9,
     type: 3}
   gridSize: 50
-  spacing: 1.5
+  spacing: 1.2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
