@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.17701456, g: 0.22159007, b: 0.30386305, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 34830644}
   - component: {fileID: 34830643}
   - component: {fileID: 34830645}
+  - component: {fileID: 34830646}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -155,6 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridGenerator: {fileID: 667297940}
   mainCamera: {fileID: 330585545}
+  packageMover: {fileID: 0}
   zoomOutFactor: 1.1
 --- !u!4 &34830644
 Transform:
@@ -186,6 +188,22 @@ MonoBehaviour:
   Aprefab: {fileID: 631714083673296417, guid: 349da6a757ffb1540bdef2073d812dbc, type: 3}
   Bprefab: {fileID: 4496435558651969489, guid: 0ae6fe68b97ff8a46969cb3f74be8e01, type: 3}
   gridGenerator: {fileID: 0}
+  packageMover: {fileID: 0}
+--- !u!114 &34830646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34830642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ed54147f215ca14ca48d1a0e6bdae5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packagePrefab: {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2,
+    type: 3}
+  moveSpeed: 2
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,13 +429,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.3119498, y: -0.7505887, z: 0.42201522, w: 0.40150607}
+  m_LocalPosition: {x: 0, y: 1542, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 62.131, y: -133.436, z: -16.072}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
