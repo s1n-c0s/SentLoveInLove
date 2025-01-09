@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
     {
         if (packageMover != null)
         {
-            packageMover.OnPackageJourneyComplete += ResetState;
+            packageMover.OnPackageJourneyComplete += OnFullJourneyComplete;
         }
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
     {
         if (packageMover != null)
         {
-            packageMover.OnPackageJourneyComplete -= ResetState;
+            packageMover.OnPackageJourneyComplete -= OnFullJourneyComplete;
         }
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
@@ -221,5 +221,11 @@ public class GameManager : MonoBehaviour
         currentScene = SceneManager.GetActiveScene();
         InitializeReferences(); // Reinitialize references
         GenerateGridAndAdjustCamera(); // Regenerate grid and adjust the camera
+    }
+
+    private void OnFullJourneyComplete()
+    {
+        Debug.Log("Package has completed its journey back and forth 4 times.");
+        ResetState(); // Reset the game state after completion
     }
 }

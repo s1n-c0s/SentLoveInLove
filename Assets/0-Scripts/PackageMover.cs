@@ -10,10 +10,12 @@ public class PackageMover : MonoBehaviour
     private bool isMoving;
     private Coroutine moveCoroutine;
 
-    // Define the event that will be called when the package completes its journey
     public event Action OnPackageJourneyComplete;
 
-    // Send package along the provided path
+    private List<Node> currentPath;
+    private int journeyCount = 0;
+    private const int maxJourneys = 4;
+
     public void SendPackage(List<Node> path)
     {
         if (packagePrefab == null)
@@ -22,20 +24,20 @@ public class PackageMover : MonoBehaviour
             return;
         }
 
-        // If no package is currently moving, spawn a new package and move it
         if (currentPackage == null && path.Count > 0)
         {
             currentPackage = Lean.Pool.LeanPool.Spawn(packagePrefab, path[0].transform.position, Quaternion.identity);
         }
 
+        currentPath = path;
+
         if (!isMoving)
         {
-            // Start moving package along the path
             if (moveCoroutine != null)
             {
-                StopCoroutine(moveCoroutine); // Stop any existing coroutines
+                StopCoroutine(moveCoroutine);
             }
-            moveCoroutine = StartCoroutine(MoveAlongPath(path)); // Start the movement along the path
+            moveCoroutine = StartCoroutine(MoveAlongPath(currentPath));
         }
     }
 
@@ -57,19 +59,28 @@ public class PackageMover : MonoBehaviour
                 continue;
             }
 
-            yield return StartCoroutine(MoveToNode(node)); // Call MoveToNode as a coroutine
+            yield return StartCoroutine(MoveToNode(node));
         }
 
-        // After reaching the final node, trigger the event
-        Debug.Log("Package completed its journey!");
+        journeyCount++;
 
-        // Trigger the event
-        OnPackageJourneyComplete?.Invoke(); // Invoke the event
+        if (journeyCount < maxJourneys)
+        {
+            Debug.Log($"Journey {journeyCount} completed. Reversing path...");
+
+            // Reverse the path and send the package back
+            currentPath.Reverse();
+            moveCoroutine = StartCoroutine(MoveAlongPath(currentPath));
+        }
+        else
+        {
+            Debug.Log("Package completed its journey 4 times!");
+            OnPackageJourneyComplete?.Invoke(); // Trigger the event
+        }
 
         isMoving = false;
     }
 
-    // Move the package to the node's position more efficiently
     private IEnumerator MoveToNode(Node node)
     {
         if (node == null)
@@ -81,16 +92,16 @@ public class PackageMover : MonoBehaviour
         Vector3 startPosition = currentPackage.transform.position;
         Vector3 targetPosition = node.transform.position;
         float distance = Vector3.Distance(startPosition, targetPosition);
-        float duration = distance / 5f; // Assuming a speed of 5 units per second
+        float duration = distance / 5f;
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             currentPackage.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
             elapsed += Time.deltaTime;
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        currentPackage.transform.position = targetPosition; // Ensure the package reaches the target
+        currentPackage.transform.position = targetPosition;
     }
 }
