@@ -1,21 +1,25 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class PlaceMe : MonoBehaviour
 {
     [SerializeField] private GameObject Aprefab; // Prefab for the sender
     [SerializeField] private GameObject Bprefab; // Prefab for the receiver
     [SerializeField] private GridGenerator gridGenerator; // Reference to the GridGenerator script
+    [SerializeField] private PackageMover packageMover; // Reference to the PackageMover script
 
     private GameObject senderInstance;
     private GameObject receiverInstance;
+
+    private Node senderNode;
+    private Node receiverNode;
 
     private bool placingSender = true; // Determines whether placing sender or receiver
 
     void Start()
     {
         InitializeReferences();
-
         Debug.Log("Click on a grid tile to place the sender (Aprefab).");
     }
 
@@ -36,6 +40,17 @@ public class PlaceMe : MonoBehaviour
             if (gridGenerator == null)
             {
                 Debug.LogError("GridGenerator is not assigned or missing in the scene!");
+                return;
+            }
+        }
+
+        // Dynamically assign packageMover if it's missing
+        if (packageMover == null)
+        {
+            packageMover = FindObjectOfType<PackageMover>();
+            if (packageMover == null)
+            {
+                Debug.LogError("PackageMover is not assigned or missing in the scene!");
                 return;
             }
         }
@@ -64,6 +79,7 @@ public class PlaceMe : MonoBehaviour
             if (hit.collider != null && gridGenerator.TargetGroupList.Contains(hit.collider.gameObject))
             {
                 Vector3 position = hit.collider.gameObject.transform.position;
+                Node clickedNode = hit.collider.gameObject.GetComponent<Node>();
 
                 if (placingSender)
                 {
@@ -71,6 +87,7 @@ public class PlaceMe : MonoBehaviour
                     if (senderInstance == null)
                     {
                         senderInstance = Lean.Pool.LeanPool.Spawn(Aprefab, position, Quaternion.identity);
+                        senderNode = clickedNode; // Store the sender's node
                         Debug.Log("Sender (Aprefab) placed. Now click to place the receiver (Bprefab).");
                         placingSender = false;
                     }
@@ -81,7 +98,20 @@ public class PlaceMe : MonoBehaviour
                     if (receiverInstance == null && senderInstance != null && senderInstance.transform.position != position)
                     {
                         receiverInstance = Lean.Pool.LeanPool.Spawn(Bprefab, position, Quaternion.identity);
-                        Debug.Log("Receiver (Bprefab) placed.");
+                        receiverNode = clickedNode; // Store the receiver's node
+                        Debug.Log("Receiver (Bprefab) placed. Calculating path and starting package movement...");
+
+                        // Trigger package movement between sender and receiver
+                        List<Node> path = Pathfinding.FindPath(senderNode, receiverNode);
+                        if (path != null && path.Count > 0)
+                        {
+                            packageMover.SendPackage(path);
+                        }
+                        else
+                        {
+                            Debug.LogError("No valid path found between sender and receiver!");
+                        }
+
                         placingSender = true; // Reset to placing sender if needed
                     }
                 }

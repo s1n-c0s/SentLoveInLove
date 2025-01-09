@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,7 +8,20 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance; // Singleton instance of the GameManager
     public GridGenerator gridGenerator; // Reference to the GridGenerator script
     public Camera mainCamera;           // Reference to the main/top-down camera
+    [SerializeField] private PackageMover packageMover;
     public float zoomOutFactor = 1.5f;  // Factor to zoom out the camera (1.5 = 50% zoom-out)
+
+    public enum GameState
+    {
+        SetAandB,     // State for placing A and B
+        MovePackage   // State for moving the package
+    }
+
+    public GameState CurrentState { get; private set; } = GameState.SetAandB; // Default state
+
+    private Node startNode; // Node for sender (A)
+    private Node endNode;   // Node for receiver (B)
+    private List<Node> path; // Path from startNode to endNode
 
     void Awake()
     {
@@ -33,6 +47,17 @@ public class GameManager : MonoBehaviour
         {
             ResetApp();
         }
+
+        // Handle state-based logic
+        switch (CurrentState)
+        {
+            case GameState.SetAandB:
+                HandleSetAandB();
+                break;
+            case GameState.MovePackage:
+                HandleMovePackage();
+                break;
+        }
     }
 
     void Start()
@@ -55,6 +80,85 @@ public class GameManager : MonoBehaviour
 
         if (mainCamera == null)
             Debug.LogError("Main Camera is not assigned or missing in the scene!");
+    }
+
+    private void HandleSetAandB()
+    {
+        if (Input.GetMouseButtonDown(0)) // Detect left mouse button click
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                if (hit.collider != null && gridGenerator.TargetGroupList.Contains(hit.collider.gameObject))
+                {
+                    Node clickedNode = hit.collider.gameObject.GetComponent<Node>();
+
+                    if (startNode == null)
+                    {
+                        startNode = clickedNode;
+                        Debug.Log("Set A (Sender) at: " + clickedNode.name);
+                    }
+                    else if (endNode == null && clickedNode != startNode)
+                    {
+                        endNode = clickedNode;
+                        Debug.Log("Set B (Receiver) at: " + clickedNode.name);
+
+                        // Transition to MovePackage state
+                        ChangeState(GameState.MovePackage);
+                    }
+                }
+            }
+        }
+    }
+
+    private void HandleMovePackage()
+    {
+        if (startNode != null && endNode != null)
+        {
+            Debug.Log("Calculating path and moving package...");
+
+            // Find the path using Pathfinding logic
+            path = Pathfinding.FindPath(startNode, endNode);
+
+            if (path != null && path.Count > 0)
+            {
+                // Move the package along the path
+                MovePackage(startNode, endNode, path);
+            }
+            else
+            {
+                Debug.LogError("No valid path found between A and B!");
+            }
+
+            // Reset states to allow re-selection
+            ResetState();
+        }
+    }
+
+    public void ChangeState(GameState newState)
+    {
+        CurrentState = newState;
+        Debug.Log("Game state changed to: " + newState);
+    }
+
+    public void ResetState()
+    {
+        Debug.Log("Resetting state...");
+        startNode = null;
+        endNode = null;
+        path = null;
+        ChangeState(GameState.SetAandB); // Reset to SetAandB state
+    }
+
+    public void MovePackage(Node startNode, Node endNode, List<Node> path)
+    {
+        if (packageMover == null)
+        {
+            Debug.LogError("PackageMover is not assigned!");
+            return;
+        }
+
+        packageMover.SendPackage(path);
     }
 
     private void GenerateGridAndAdjustCamera()
