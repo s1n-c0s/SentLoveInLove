@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
 
     private Node startNode; // Node for sender (A)
     private Node endNode;   // Node for receiver (B)
-    private List<Node> path; // Path from startNode to endNode
 
     void Awake()
     {
@@ -54,9 +53,6 @@ public class GameManager : MonoBehaviour
             case GameState.SetAandB:
                 HandleSetAandB();
                 break;
-            case GameState.MovePackage:
-                HandleMovePackage();
-                break;
         }
     }
 
@@ -80,6 +76,9 @@ public class GameManager : MonoBehaviour
 
         if (mainCamera == null)
             Debug.LogError("Main Camera is not assigned or missing in the scene!");
+
+        if (packageMover == null)
+            packageMover = GetComponent<PackageMover>();
     }
 
     private void HandleSetAandB()
@@ -105,33 +104,34 @@ public class GameManager : MonoBehaviour
 
                         // Transition to MovePackage state
                         ChangeState(GameState.MovePackage);
+
+                        // Start the package movement
+                        StartPackageMovement();
                     }
                 }
             }
         }
     }
 
-    private void HandleMovePackage()
+    private void StartPackageMovement()
     {
         if (startNode != null && endNode != null)
         {
             Debug.Log("Calculating random path and moving package...");
 
             // Find a random path using Pathfinding logic
-            path = Pathfinding.FindPath(startNode, endNode);
+            List<Node> path = Pathfinding.FindRandomPath(startNode, endNode);
 
             if (path != null && path.Count > 0)
             {
                 // Move the package along the random path
-                MovePackage(startNode, endNode, path);
+                packageMover.SendPackage(path);
             }
             else
             {
                 Debug.LogError("No valid path found between A and B!");
+                ResetState();
             }
-
-            // Reset states to allow re-selection
-            ResetState();
         }
     }
 
@@ -146,19 +146,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("Resetting state...");
         startNode = null;
         endNode = null;
-        path = null;
         ChangeState(GameState.SetAandB); // Reset to SetAandB state
     }
 
-    public void MovePackage(Node startNode, Node endNode, List<Node> path)
+    public void ResetApp()
     {
-        if (packageMover == null)
-        {
-            Debug.LogError("PackageMover is not assigned!");
-            return;
-        }
-
-        packageMover.SendPackage(path);
+        // Reload the current active scene
+        SceneManager.LoadScene(currentScene.buildIndex);
     }
 
     private void GenerateGridAndAdjustCamera()
@@ -204,27 +198,28 @@ public class GameManager : MonoBehaviour
         Debug.Log("Camera adjusted to fit the grid with zoom-out factor.");
     }
 
-    public void ResetApp()
+    private void OnEnable()
     {
-        // Reload the current active scene
-        SceneManager.LoadScene(currentScene.buildIndex);
+        if (packageMover != null)
+        {
+            packageMover.OnPackageJourneyComplete += ResetState;
+        }
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // Dynamically update references when a new scene is loaded
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnDisable()
+    {
+        if (packageMover != null)
+        {
+            packageMover.OnPackageJourneyComplete -= ResetState;
+        }
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentScene = SceneManager.GetActiveScene();
         InitializeReferences(); // Reinitialize references
         GenerateGridAndAdjustCamera(); // Regenerate grid and adjust the camera
-    }
-
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

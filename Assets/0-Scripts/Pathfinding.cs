@@ -1,16 +1,24 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Pathfinding
 {
-    public static List<Node> FindPath(Node startNode, Node endNode)
+    // FindRandomPath creates a random path from startNode to endNode
+    public static List<Node> FindRandomPath(Node startNode, Node endNode)
     {
+        // List to store the path
+        List<Node> path = new List<Node>();
+
+        // Queue for breadth-first search (BFS)
         Queue<Node> queue = new Queue<Node>();
         Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>();
-        List<Node> path = new List<Node>();
-        
+
         queue.Enqueue(startNode);
         cameFrom[startNode] = null;
+
+        // Random number generator for randomizing path direction
+        System.Random random = new System.Random();
 
         while (queue.Count > 0)
         {
@@ -25,18 +33,17 @@ public class Pathfinding
                     path.Add(temp);
                     temp = cameFrom[temp];
                 }
-                path.Reverse();
+                path.Reverse(); // Reverse the path to get the correct order
                 return path;
             }
 
+            // Randomize the order of neighbors to make path random
             List<Node> neighbors = new List<Node>(current.GetNeighbors());
-
-            // Randomize the order of neighbors for a more "random" path
-            Shuffle(neighbors);
+            neighbors = neighbors.OrderBy(x => random.Next()).ToList();  // Shuffle neighbors
 
             foreach (Node neighbor in neighbors)
             {
-                if (!cameFrom.ContainsKey(neighbor) && neighbor.isWalkable)
+                if (!cameFrom.ContainsKey(neighbor))
                 {
                     queue.Enqueue(neighbor);
                     cameFrom[neighbor] = current;
@@ -45,20 +52,5 @@ public class Pathfinding
         }
 
         return path; // Return empty path if no path is found
-    }
-
-    // Utility method to shuffle the list
-    private static void Shuffle(List<Node> list)
-    {
-        System.Random rng = new System.Random();
-        int n = list.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            Node value = list[k];
-            list[k] = list[n];
-            list[n] = value;
-        }
     }
 }

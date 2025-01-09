@@ -102,7 +102,7 @@ public class PlaceMe : MonoBehaviour
                         Debug.Log("Receiver (Bprefab) placed. Calculating path and starting package movement...");
 
                         // Trigger package movement between sender and receiver
-                        List<Node> path = Pathfinding.FindPath(senderNode, receiverNode);
+                        List<Node> path = Pathfinding.FindRandomPath(senderNode, receiverNode);
                         if (path != null && path.Count > 0)
                         {
                             packageMover.SendPackage(path);
