@@ -154,8 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01dac0006a1ea364593ebfe1d3fa737d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridGenerator: {fileID: 667297940}
-  mainCamera: {fileID: 330585545}
+  gridGenerator: {fileID: 0}
+  mainCamera: {fileID: 0}
   packageMover: {fileID: 0}
   zoomOutFactor: 1.1
 --- !u!4 &34830644
@@ -203,7 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   packagePrefab: {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2,
     type: 3}
-  moveSpeed: 5
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
