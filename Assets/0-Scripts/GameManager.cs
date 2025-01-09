@@ -115,14 +115,14 @@ public class GameManager : MonoBehaviour
     {
         if (startNode != null && endNode != null)
         {
-            Debug.Log("Calculating path and moving package...");
+            Debug.Log("Calculating random path and moving package...");
 
-            // Find the path using Pathfinding logic
+            // Find a random path using Pathfinding logic
             path = Pathfinding.FindPath(startNode, endNode);
 
             if (path != null && path.Count > 0)
             {
-                // Move the package along the path
+                // Move the package along the random path
                 MovePackage(startNode, endNode, path);
             }
             else

@@ -203,7 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   packagePrefab: {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2,
     type: 3}
-  moveSpeed: 2
+  moveSpeed: 5
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePrefab: {fileID: 3600933413957533853, guid: 111de594a4844ed48a69bc610eecdac9,
     type: 3}
-  gridSize: 50
+  gridSize: 20
   spacing: 1.2
 --- !u!1 &832575517
 GameObject:
