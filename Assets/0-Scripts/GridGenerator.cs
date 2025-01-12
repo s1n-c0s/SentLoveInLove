@@ -3,51 +3,47 @@ using System.Collections.Generic;
 
 public class GridGenerator : MonoBehaviour
 {
-    public GameObject cubePrefab;      // Cube prefab for grid generation
-    public int gridSize = 10;          // Number of cubes along one axis
-    public float spacing = 1.1f;       // Spacing between cubes
+    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private int _gridSize = 10;
+    [SerializeField] private float _spacing = 1.1f;
+    [Range(0, 100)] public int unwalkableChancePercent = 15; // Percentage chance for unwalkable nodes
+
     private List<GameObject> targetGroupList = new List<GameObject>();
-    private Node[,] nodeGrid;          // 2D array to store Node references
-
-    public List<GameObject> TargetGroupList => targetGroupList; // Public read-only access to the list
-
-    private bool isGridGenerated = false; // Flag to track grid generation
+    private Node[,] nodeGrid;
+    private bool isGridGenerated = false;
 
     public void GenerateGrid()
     {
-        if (cubePrefab == null)
+        if (_cubePrefab == null)
         {
             Debug.LogError("Cube prefab is not assigned!");
             return;
         }
 
-        // Only generate grid if not already generated
-        if (!isGridGenerated)
+        if (isGridGenerated) return;
+
+        ClearGrid();
+
+        nodeGrid = new Node[_gridSize, _gridSize];
+
+        for (int x = 0; x < _gridSize; x++)
         {
-            ClearGrid(); // Clear existing grid before generating a new one
-
-            nodeGrid = new Node[gridSize, gridSize]; // Initialize the 2D node array
-
-            for (int x = 0; x < gridSize; x++)
+            for (int z = 0; z < _gridSize; z++)
             {
-                for (int z = 0; z < gridSize; z++)
-                {
-                    Vector3 position = new Vector3(x * spacing, 0, z * spacing);
-                    GameObject cube = Lean.Pool.LeanPool.Spawn(cubePrefab, position, Quaternion.identity, transform);
+                Vector3 position = new Vector3(x * _spacing, 0, z * _spacing);
+                GameObject cube = Lean.Pool.LeanPool.Spawn(_cubePrefab, position, Quaternion.identity, transform);
 
-                    Node node = cube.AddComponent<Node>(); // Add the Node script to the cube
-                    nodeGrid[x, z] = node;                // Store reference to the node
-                    node.gridPosition = new Vector2Int(x, z); // Save grid coordinates in the Node
-                    targetGroupList.Add(cube);            // Add cube to the list
-                }
+                Node node = cube.AddComponent<Node>();
+                nodeGrid[x, z] = node;
+                node.gridPosition = new Vector2Int(x, z);
+                targetGroupList.Add(cube);
             }
-
-            // Connect the nodes to their neighbors
-            ConnectNodes();
-
-            isGridGenerated = true; // Mark grid as generated
-            Debug.Log($"{gridSize * gridSize} cubes generated and nodes connected.");
         }
+
+        ConnectNodes();
+        RandomizeWalkability();
+        isGridGenerated = true;
+        Debug.Log($"{_gridSize * _gridSize} cubes generated and nodes connected.");
     }
 
     public void ClearGrid()
@@ -56,48 +52,166 @@ public class GridGenerator : MonoBehaviour
         {
             if (obj != null)
             {
-                Lean.Pool.LeanPool.Despawn(obj); // Despawn objects using Lean Pool
+                Lean.Pool.LeanPool.Despawn(obj);
             }
         }
-        targetGroupList.Clear(); // Clear the list
-        nodeGrid = null;         // Clear the node grid
-        isGridGenerated = false; // Reset grid generation flag
+        targetGroupList.Clear();
+        nodeGrid = null;
+        isGridGenerated = false;
         Debug.Log("Grid cleared.");
-    }
-
-    public Bounds CalculateGridBounds()
-    {
-        if (targetGroupList == null || targetGroupList.Count == 0)
-        {
-            Debug.LogError("No targets found in the grid!");
-            return new Bounds(Vector3.zero, Vector3.zero);
-        }
-
-        // Calculate bounds of all objects in the grid
-        Bounds bounds = new Bounds(targetGroupList[0].transform.position, Vector3.zero);
-        foreach (GameObject target in targetGroupList)
-        {
-            bounds.Encapsulate(target.transform.position);
-        }
-
-        return bounds;
     }
 
     private void ConnectNodes()
     {
-        for (int x = 0; x < gridSize; x++)
+        for (int x = 0; x < _gridSize; x++)
         {
-            for (int z = 0; z < gridSize; z++)
+            for (int z = 0; z < _gridSize; z++)
             {
                 Node currentNode = nodeGrid[x, z];
 
-                // Add neighbors in all 4 cardinal directions
                 if (x > 0) currentNode.AddNeighbor(nodeGrid[x - 1, z]); // Left
-                if (x < gridSize - 1) currentNode.AddNeighbor(nodeGrid[x + 1, z]); // Right
+                if (x < _gridSize - 1) currentNode.AddNeighbor(nodeGrid[x + 1, z]); // Right
                 if (z > 0) currentNode.AddNeighbor(nodeGrid[x, z - 1]); // Down
-                if (z < gridSize - 1) currentNode.AddNeighbor(nodeGrid[x, z + 1]); // Up
+                if (z < _gridSize - 1) currentNode.AddNeighbor(nodeGrid[x, z + 1]); // Up
             }
         }
-        Debug.Log("Nodes successfully connected to their neighbors.");
+    }
+
+    private void RandomizeWalkability()
+    {
+        foreach (GameObject cube in targetGroupList)
+        {
+            Node node = cube.GetComponent<Node>();
+            // Convert percentage to a float for Random.value comparison
+            float chance = unwalkableChancePercent / 100f;
+            node.isWalkable = Random.value >= chance;
+
+            // Update color only if necessary
+            Renderer renderer = cube.GetComponentInChildren<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.color = node.isWalkable ? Color.white : Color.red;
+            }
+        }
+
+        EnsureConnectivity();
+    }
+
+    private void EnsureConnectivity()
+    {
+        // Flood-fill to find connected walkable nodes
+        HashSet<Node> connectedNodes = new HashSet<Node>();
+        Queue<Node> queue = new Queue<Node>();
+
+        // Find the first walkable node to start the flood-fill
+        Node startNode = null;
+        foreach (Node node in nodeGrid)
+        {
+            if (node != null && node.isWalkable)
+            {
+                startNode = node;
+                break;
+            }
+        }
+
+        if (startNode == null) return; // No walkable nodes
+
+        queue.Enqueue(startNode);
+        connectedNodes.Add(startNode);
+
+        while (queue.Count > 0)
+        {
+            Node current = queue.Dequeue();
+
+            foreach (Node neighbor in current.GetNeighbors())
+            {
+                if (neighbor != null && neighbor.isWalkable && connectedNodes.Add(neighbor))
+                {
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+
+        // Ensure all walkable nodes are connected
+        foreach (Node node in nodeGrid)
+        {
+            if (node != null && node.isWalkable && !connectedNodes.Contains(node))
+            {
+                node.isWalkable = true;
+
+                Renderer renderer = node.GetComponentInChildren<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material.color = Color.white;
+                }
+
+                queue.Enqueue(node);
+                connectedNodes.Add(node);
+            }
+        }
+
+        EnsureWalkableNeighbors();
+    }
+
+    private void EnsureWalkableNeighbors()
+    {
+        foreach (Node node in nodeGrid)
+        {
+            if (node == null || !node.isWalkable) continue;
+
+            bool hasWalkableNeighbor = false;
+
+            foreach (Node neighbor in node.GetNeighbors())
+            {
+                if (neighbor != null && neighbor.isWalkable)
+                {
+                    hasWalkableNeighbor = true;
+                    break;
+                }
+            }
+
+            if (!hasWalkableNeighbor)
+            {
+                foreach (Node neighbor in node.GetNeighbors())
+                {
+                    if (neighbor != null && !neighbor.isWalkable)
+                    {
+                        neighbor.isWalkable = true;
+
+                        Renderer renderer = neighbor.GetComponentInChildren<Renderer>();
+                        if (renderer != null)
+                        {
+                            renderer.material.color = Color.white;
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public Bounds CalculateGridBounds()
+    {
+        if (nodeGrid == null) return new Bounds(Vector3.zero, Vector3.zero);
+
+        Vector3 min = new Vector3(float.MaxValue, 0, float.MaxValue);
+        Vector3 max = new Vector3(float.MinValue, 0, float.MinValue);
+
+        // Loop through all the nodes to calculate the bounds
+        foreach (Node node in nodeGrid)
+        {
+            if (node == null) continue;
+
+            Vector3 position = node.transform.position;
+
+            // Update min and max based on the node's position
+            min = Vector3.Min(min, position);
+            max = Vector3.Max(max, position);
+        }
+
+        // Create a bounds using the min and max points
+        Bounds bounds = new Bounds((min + max) / 2f, max - min);
+        return bounds;
     }
 }
