@@ -35,8 +35,10 @@ public class PlaceMe : MonoBehaviour
 
         if (prefabToSpawn == null) return;
 
-        LeanPool.Spawn(prefabToSpawn, centerPosition, Quaternion.identity);
-        Debug.Log($"{prefabToSpawn.name} placed at {centerPosition}");
+        // Spawn the object and set its parent to the node
+        GameObject spawnedObject = LeanPool.Spawn(prefabToSpawn, centerPosition, Quaternion.identity);
+        spawnedObject.transform.SetParent(node.transform); // Make the node its parent
+        Debug.Log($"{prefabToSpawn.name} placed at {centerPosition} ");
 
         isNextPrefabA = !isNextPrefabA;
         placedCount++;
