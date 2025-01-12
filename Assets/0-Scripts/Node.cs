@@ -10,6 +10,7 @@ public class Node : MonoBehaviour
     // Optional: To debug and visualize connections
     private void OnDrawGizmos()
     {
+        // Draw neighbors connections
         if (neighbors.Count > 0)
         {
             Gizmos.color = Color.green;
@@ -21,7 +22,15 @@ public class Node : MonoBehaviour
                 }
             }
         }
+
+        // Visualize unwalkable nodes in red
+        if (!isWalkable)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position, 0.2f); // Optional: Draw a sphere to indicate unwalkable node
+        }
     }
+
 
     public List<Node> GetNeighbors()
     {
