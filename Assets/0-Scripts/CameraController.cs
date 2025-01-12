@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
         // Ensure the camera looks at the grid center
         virtualCamera.transform.LookAt(center);
 
-        Debug.Log("Camera adjusted to fit the grid with zoom-out factor.");
+        // Debug.Log("Camera adjusted to fit the grid with zoom-out factor.");
     }
 
 
