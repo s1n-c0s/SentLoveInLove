@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.SceneManagement;
 
 public class GameLoop : MonoBehaviour
 {
@@ -21,9 +20,7 @@ public class GameLoop : MonoBehaviour
     private void Start()
     {
         InitializeSceneReferences();
-        // SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
 
     public void StartGame()
     {
@@ -32,21 +29,7 @@ public class GameLoop : MonoBehaviour
         gridGenerator.GenerateGrid();
         // Adjust the camera to fit the grid
         cameraController.AdjustCameraToFitGrid();
-        // Place the player on the grid
+        // Enable placement
         _placeMe.CanPlace = true;
     }
-
-
-    // private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    // {
-    //     // Reinitialize references whenever a new scene is loaded
-    //     InitializeSceneReferences();
-    // }
-
-    // private void OnDestroy()
-    // {
-    //     // Unsubscribe from the event to avoid memory leaks
-    //     SceneManager.sceneLoaded -= OnSceneLoaded;
-    // }
-
 }

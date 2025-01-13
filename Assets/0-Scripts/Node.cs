@@ -54,4 +54,22 @@ public class Node : MonoBehaviour
             neighbors.Remove(node);
         }
     }
+
+    public bool TryGetNeighbor(Vector2Int position, out Node neighbor)
+    {
+        neighbor = null;
+
+        // Loop through the neighbors to find one with the matching grid position
+        foreach (Node potentialNeighbor in neighbors)
+        {
+            if (potentialNeighbor.gridPosition == position)
+            {
+                neighbor = potentialNeighbor;
+                return true;
+            }
+        }
+
+        // If no matching neighbor is found, return false
+        return false;
+    }
 }
