@@ -6,11 +6,11 @@ public class GridGenerator : MonoBehaviour
     [SerializeField] private GameObject _cubePrefab;
     [SerializeField] private int _gridSize = 10;
     [SerializeField] private float _spacing = 1.1f;
-    [Range(0, 100)] public int unwalkableChancePercent = 15; // Percentage chance for unwalkable nodes
+    [SerializeField][Range(0, 100)] private int _unwalkableChancePercent = 15; // Percentage chance for unwalkable nodes
 
-    private List<GameObject> targetGroupList = new List<GameObject>();
-    private Node[,] nodeGrid;
-    private bool isGridGenerated = false;
+    private List<GameObject> _targetGroupList = new List<GameObject>();
+    private Node[,] _nodeGrid;
+    private bool _isGridGenerated = false;
 
     public void GenerateGrid()
     {
@@ -20,11 +20,11 @@ public class GridGenerator : MonoBehaviour
             return;
         }
 
-        if (isGridGenerated) return;
+        if (_isGridGenerated) return;
 
         ClearGrid();
 
-        nodeGrid = new Node[_gridSize, _gridSize];
+        _nodeGrid = new Node[_gridSize, _gridSize];
 
         for (int x = 0; x < _gridSize; x++)
         {
@@ -34,30 +34,30 @@ public class GridGenerator : MonoBehaviour
                 GameObject cube = Lean.Pool.LeanPool.Spawn(_cubePrefab, position, Quaternion.identity, transform);
 
                 Node node = cube.AddComponent<Node>();
-                nodeGrid[x, z] = node;
+                _nodeGrid[x, z] = node;
                 node.gridPosition = new Vector2Int(x, z);
-                targetGroupList.Add(cube);
+                _targetGroupList.Add(cube);
             }
         }
 
         ConnectNodes();
         RandomizeWalkability();
-        isGridGenerated = true;
+        _isGridGenerated = true;
         Debug.Log($"{_gridSize * _gridSize} cubes generated and nodes connected.");
     }
 
     public void ClearGrid()
     {
-        foreach (GameObject obj in targetGroupList)
+        foreach (GameObject obj in _targetGroupList)
         {
             if (obj != null)
             {
                 Lean.Pool.LeanPool.Despawn(obj);
             }
         }
-        targetGroupList.Clear();
-        nodeGrid = null;
-        isGridGenerated = false;
+        _targetGroupList.Clear();
+        _nodeGrid = null;
+        _isGridGenerated = false;
         Debug.Log("Grid cleared.");
     }
 
@@ -67,23 +67,23 @@ public class GridGenerator : MonoBehaviour
         {
             for (int z = 0; z < _gridSize; z++)
             {
-                Node currentNode = nodeGrid[x, z];
+                Node currentNode = _nodeGrid[x, z];
 
-                if (x > 0) currentNode.AddNeighbor(nodeGrid[x - 1, z]); // Left
-                if (x < _gridSize - 1) currentNode.AddNeighbor(nodeGrid[x + 1, z]); // Right
-                if (z > 0) currentNode.AddNeighbor(nodeGrid[x, z - 1]); // Down
-                if (z < _gridSize - 1) currentNode.AddNeighbor(nodeGrid[x, z + 1]); // Up
+                if (x > 0) currentNode.AddNeighbor(_nodeGrid[x - 1, z]); // Left
+                if (x < _gridSize - 1) currentNode.AddNeighbor(_nodeGrid[x + 1, z]); // Right
+                if (z > 0) currentNode.AddNeighbor(_nodeGrid[x, z - 1]); // Down
+                if (z < _gridSize - 1) currentNode.AddNeighbor(_nodeGrid[x, z + 1]); // Up
             }
         }
     }
 
     private void RandomizeWalkability()
     {
-        foreach (GameObject cube in targetGroupList)
+        foreach (GameObject cube in _targetGroupList)
         {
             Node node = cube.GetComponent<Node>();
             // Convert percentage to a float for Random.value comparison
-            float chance = unwalkableChancePercent / 100f;
+            float chance = _unwalkableChancePercent / 100f;
             node.isWalkable = Random.value >= chance;
 
             // Update color only if necessary
@@ -105,7 +105,7 @@ public class GridGenerator : MonoBehaviour
 
         // Find the first walkable node to start the flood-fill
         Node startNode = null;
-        foreach (Node node in nodeGrid)
+        foreach (Node node in _nodeGrid)
         {
             if (node != null && node.isWalkable)
             {
@@ -133,7 +133,7 @@ public class GridGenerator : MonoBehaviour
         }
 
         // Ensure all walkable nodes are connected
-        foreach (Node node in nodeGrid)
+        foreach (Node node in _nodeGrid)
         {
             if (node != null && node.isWalkable && !connectedNodes.Contains(node))
             {
@@ -155,7 +155,7 @@ public class GridGenerator : MonoBehaviour
 
     private void EnsureWalkableNeighbors()
     {
-        foreach (Node node in nodeGrid)
+        foreach (Node node in _nodeGrid)
         {
             if (node == null || !node.isWalkable) continue;
 
@@ -193,13 +193,13 @@ public class GridGenerator : MonoBehaviour
 
     public Bounds CalculateGridBounds()
     {
-        if (nodeGrid == null) return new Bounds(Vector3.zero, Vector3.zero);
+        if (_nodeGrid == null) return new Bounds(Vector3.zero, Vector3.zero);
 
         Vector3 min = new Vector3(float.MaxValue, 0, float.MaxValue);
         Vector3 max = new Vector3(float.MinValue, 0, float.MinValue);
 
         // Loop through all the nodes to calculate the bounds
-        foreach (Node node in nodeGrid)
+        foreach (Node node in _nodeGrid)
         {
             if (node == null) continue;
 
