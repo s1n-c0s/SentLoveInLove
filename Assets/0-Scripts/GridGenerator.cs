@@ -87,11 +87,11 @@ public class GridGenerator : MonoBehaviour
             node.isWalkable = Random.value >= chance;
 
             // Update color only if necessary
-            Renderer renderer = cube.GetComponentInChildren<Renderer>();
-            if (renderer != null)
-            {
-                renderer.material.color = node.isWalkable ? Color.white : Color.red;
-            }
+            // Renderer renderer = cube.GetComponentInChildren<Renderer>();
+            // if (renderer != null)
+            // {
+            //     renderer.material.color = node.isWalkable ? Color.white : Color.red;
+            // }
         }
 
         EnsureConnectivity();
@@ -139,11 +139,11 @@ public class GridGenerator : MonoBehaviour
             {
                 node.isWalkable = true;
 
-                Renderer renderer = node.GetComponentInChildren<Renderer>();
-                if (renderer != null)
-                {
-                    renderer.material.color = Color.white;
-                }
+                // Renderer renderer = node.GetComponentInChildren<Renderer>();
+                // if (renderer != null)
+                // {
+                //     renderer.material.color = Color.white;
+                // }
 
                 queue.Enqueue(node);
                 connectedNodes.Add(node);
@@ -178,11 +178,11 @@ public class GridGenerator : MonoBehaviour
                     {
                         neighbor.isWalkable = true;
 
-                        Renderer renderer = neighbor.GetComponentInChildren<Renderer>();
-                        if (renderer != null)
-                        {
-                            renderer.material.color = Color.white;
-                        }
+                        // Renderer renderer = neighbor.GetComponentInChildren<Renderer>();
+                        // if (renderer != null)
+                        // {
+                        //     renderer.material.color = Color.white;
+                        // }
 
                         break;
                     }

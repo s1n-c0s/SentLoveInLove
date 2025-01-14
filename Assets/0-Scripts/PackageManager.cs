@@ -1,18 +1,29 @@
 using System.Collections.Generic;
-using UnityEngine;
 using Lean.Pool;
+using UnityEngine;
 
 public class PackageManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _Package = new List<GameObject>();
+    [SerializeField] private List<GameObject> _package = new List<GameObject>();
 
-    public void SpawnPackageAt(Vector3 position)
+    // Spawn a package at a specific position
+    public void SpawnPackageAround(Vector3 position)
     {
-        if (_Package.Count == 0) return;
+        if (_package.Count == 0) return;
 
         // Randomly pick a package from the list
-        GameObject package = _Package[Random.Range(0, _Package.Count)];
+        GameObject package = _package[Random.Range(0, _package.Count)];
+        if (gameObject.CompareTag("PersonA"))
+        {
+            package.GetComponent<PackageMover>().targetPerson = GameObject.FindGameObjectWithTag("PersonB");
+        }
+        else if (gameObject.CompareTag("PersonB"))
+        {
+            package.GetComponent<PackageMover>().targetPerson = GameObject.FindGameObjectWithTag("PersonA");
+        }
+        // Use LeanPool to spawn the package
         LeanPool.Spawn(package, position, Quaternion.identity);
-        Debug.Log($"{package.name} spawned at {position}");
+
+        Debug.Log($"Package spawned at {position}");
     }
 }

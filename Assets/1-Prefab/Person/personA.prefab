@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1552286687040805903}
+  - component: {fileID: -7084180893931022771}
+  - component: {fileID: -5533802584271330167}
   m_Layer: 0
   m_Name: personA
   m_TagString: PersonA
@@ -32,6 +34,35 @@ Transform:
   - {fileID: 999663531130561535}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7084180893931022771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631714083673296417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 805e01904d9136e498e406dda04c3e60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _packageManager: {fileID: -5533802584271330167}
+--- !u!114 &-5533802584271330167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631714083673296417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ae22c2bdf99a44ab2a455da377932e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _package:
+  - {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2, type: 3}
+  - {fileID: 8368223773260838323, guid: a9d9ecc9b4be5754f9dd6be12708ddf6, type: 3}
+  - {fileID: 5677173410238703765, guid: ff12d2e01489c024885ffcd1d051e1eb, type: 3}
 --- !u!1 &5812070604491343641
 GameObject:
   m_ObjectHideFlags: 0

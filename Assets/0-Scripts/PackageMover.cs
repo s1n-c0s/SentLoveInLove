@@ -1,107 +1,102 @@
-using UnityEngine;
 using System.Collections.Generic;
-using System;
-using System.Collections;
+using UnityEngine;
 
 public class PackageMover : MonoBehaviour
 {
-    [SerializeField] private GameObject packagePrefab;
-    private GameObject currentPackage;
-    private bool isMoving;
-    private Coroutine moveCoroutine;
+    //public bool _fromPersonA { get; set; }
+    [SerializeField][Range(10f, 30f)] private float _minSpeed = 10f;
+    [SerializeField][Range(10f, 30f)] private float _maxSpeed = 30f;
+    [SerializeField] public GameObject targetPerson;
 
-    public event Action OnPackageJourneyComplete;
+    private float _speed;
+    private List<Node> _path = new List<Node>();
+    private int _currentNodeIndex = 0;
 
-    private List<Node> currentPath;
-    private int journeyCount = 0;
-    private const int maxJourneys = 4;
-
-    public void SendPackage(List<Node> path)
+    private void Start()
     {
-        if (packagePrefab == null)
+        // Set a random speed within the specified range
+        _speed = Random.Range(_minSpeed, _maxSpeed);
+
+        // Determine target person
+        //targetPerson = GameObject.FindGameObjectWithTag(_fromPersonA ? "PersonB" : "PersonA");
+
+        if (targetPerson == null)
         {
-            Debug.LogError("Package prefab is not assigned!");
+            Debug.LogError("Target person not found!");
             return;
         }
 
-        if (currentPackage == null && path.Count > 0)
-        {
-            currentPackage = Lean.Pool.LeanPool.Spawn(packagePrefab, path[0].transform.position, Quaternion.identity);
-        }
+        // Find the starting and ending nodes
+        Node startNode = FindClosestNode(transform.position);
+        Node targetNode = FindClosestNode(targetPerson.transform.position);
 
-        currentPath = path;
-
-        if (!isMoving)
+        if (startNode != null && targetNode != null)
         {
-            if (moveCoroutine != null)
+            // Get the path using a pathfinding algorithm
+            _path = Pathfinding.FindPath(startNode, targetNode);
+
+            if (_path.Count > 0)
             {
-                StopCoroutine(moveCoroutine);
+                Debug.Log($"Path found from {startNode.name} to {targetNode.name}. Starting movement.");
             }
-            moveCoroutine = StartCoroutine(MoveAlongPath(currentPath));
-        }
-    }
-
-    private IEnumerator MoveAlongPath(List<Node> path)
-    {
-        if (path == null || path.Count == 0)
-        {
-            Debug.LogError("Path is empty or null!");
-            yield break;
-        }
-
-        isMoving = true;
-
-        foreach (Node node in path)
-        {
-            if (node == null)
+            else
             {
-                Debug.LogError("Node in path is null!");
-                continue;
+                Debug.LogWarning("No path found between nodes.");
             }
-
-            yield return StartCoroutine(MoveToNode(node));
-        }
-
-        journeyCount++;
-
-        if (journeyCount < maxJourneys)
-        {
-            Debug.Log($"Journey {journeyCount} completed. Reversing path...");
-
-            // Reverse the path and send the package back
-            currentPath.Reverse();
-            moveCoroutine = StartCoroutine(MoveAlongPath(currentPath));
         }
         else
         {
-            Debug.Log("Package completed its journey 4 times!");
-            OnPackageJourneyComplete?.Invoke(); // Trigger the event
+            Debug.LogError("Start or target node is null!");
         }
-
-        isMoving = false;
     }
 
-    private IEnumerator MoveToNode(Node node)
+    private void Update()
     {
-        if (node == null)
+        // Move along the path if it exists
+        if (_path.Count > 0 && _currentNodeIndex < _path.Count)
         {
-            Debug.LogError("Node is null!");
-            yield break;
+            MoveAlongPath();
+        }
+    }
+
+    private void MoveAlongPath()
+    {
+        Node targetNode = _path[_currentNodeIndex];
+        Vector3 targetPosition = targetNode.transform.position;
+
+        // Move towards the current target node
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
+
+        // Check if we've reached the target node
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            _currentNodeIndex++;
+
+            // If we've reached the final node, destroy the package
+            if (_currentNodeIndex >= _path.Count)
+            {
+                Debug.Log($"Package reached its destination: {targetPerson.name}");
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private Node FindClosestNode(Vector3 position)
+    {
+        // Find the closest node to the given position
+        Node closestNode = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (Node node in FindObjectsOfType<Node>())
+        {
+            float distance = Vector3.Distance(position, node.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestNode = node;
+            }
         }
 
-        Vector3 startPosition = currentPackage.transform.position;
-        Vector3 targetPosition = node.transform.position;
-        float distance = Vector3.Distance(startPosition, targetPosition);
-        float duration = distance / 5f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            currentPackage.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        currentPackage.transform.position = targetPosition;
+        return closestNode;
     }
 }
