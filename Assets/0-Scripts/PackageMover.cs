@@ -4,23 +4,29 @@ using Lean.Pool;
 
 public class PackageMover : MonoBehaviour
 {
-    [SerializeField][Range(0f, 30f)] private float _minSpeed = 5f;
-    [SerializeField][Range(0f, 30f)] private float _maxSpeed = 30f;
+    [SerializeField] [Range(0f, 30f)] private float _minSpeed = 5f;
+    [SerializeField] [Range(0f, 30f)] private float _maxSpeed = 30f;
     [SerializeField] public GameObject targetPerson;
+    [SerializeField] private TrailRenderer _trail; // Use TrailRenderer for the tail
 
     private float _speed;
     private List<Node> _path = new List<Node>();
     private int _currentNodeIndex = 0;
+    private bool _isReadyToMove = false;
 
-    // Reset method to initialize the package when pooled
     public void Initialize(GameObject newTarget)
     {
+        // Reset state before starting movement
         targetPerson = newTarget;
-
-        // Reset state
+        _speed = Random.Range(_minSpeed, _maxSpeed);
         _path.Clear();
         _currentNodeIndex = 0;
-        _speed = Random.Range(_minSpeed, _maxSpeed);
+        _isReadyToMove = false;
+
+        if (_trail != null)
+        {
+            ResetTrail(); // Clear trail before movement starts
+        }
 
         if (targetPerson == null)
         {
@@ -28,7 +34,7 @@ public class PackageMover : MonoBehaviour
             return;
         }
 
-        // Find path
+        // Find start and target nodes
         Node startNode = FindClosestNode(transform.position);
         Node targetNode = FindClosestNode(targetPerson.transform.position);
 
@@ -38,6 +44,7 @@ public class PackageMover : MonoBehaviour
             if (_path.Count > 0)
             {
                 Debug.Log($"Path found from {startNode.name} to {targetNode.name}. Starting movement.");
+                _isReadyToMove = true;
             }
             else
             {
@@ -52,7 +59,7 @@ public class PackageMover : MonoBehaviour
 
     private void Update()
     {
-        if (_path.Count > 0 && _currentNodeIndex < _path.Count)
+        if (_isReadyToMove && _path.Count > 0 && _currentNodeIndex < _path.Count)
         {
             MoveAlongPath();
         }
@@ -73,6 +80,7 @@ public class PackageMover : MonoBehaviour
             {
                 Debug.Log($"Package reached its destination: {targetPerson.name}");
                 LeanPool.Despawn(gameObject);
+                ResetTrail(); // Reset trail upon reaching destination
             }
         }
     }
@@ -93,5 +101,13 @@ public class PackageMover : MonoBehaviour
         }
 
         return closestNode;
+    }
+
+    private void ResetTrail()
+    {
+        if (_trail != null)
+        {
+            _trail.Clear(); // Clear the TrailRenderer's current trail
+        }
     }
 }
