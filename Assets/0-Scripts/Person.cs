@@ -7,9 +7,6 @@ public class Person : MonoBehaviour
     [SerializeField] private PackageManager _packageManager;
     private Node _currentNode;
 
-    // To keep track of nodes that already have packages
-    private HashSet<Node> _occupiedNodes = new HashSet<Node>();
-
     public void Initialize(Node assignedNode)
     {
         _currentNode = assignedNode;
@@ -43,10 +40,10 @@ public class Person : MonoBehaviour
         {
             Vector2Int neighborPos = centerNode.gridPosition + direction;
 
-            // Check if the neighbor node is valid, walkable, and not already occupied
+            // Check if the neighbor node is valid, walkable, and does not already have a package
             if (centerNode.TryGetNeighbor(neighborPos, out Node neighbor) &&
                 neighbor.isWalkable &&
-                !_occupiedNodes.Contains(neighbor))
+                !HasPackageOnNode(neighbor))
             {
                 validNodes.Add(neighbor);
             }
@@ -57,13 +54,10 @@ public class Person : MonoBehaviour
             // Select a random node from the valid list
             Node selectedNode = validNodes[Random.Range(0, validNodes.Count)];
 
-            // Use the PackageManager to spawn the package
+            // Spawn the package at the selected node
             _packageManager.SpawnPackageAround(selectedNode.transform.position);
 
-            // Mark this node as occupied
-            _occupiedNodes.Add(selectedNode);
-
-            Debug.Log($"Package spawned at {selectedNode.transform.position}");
+            Debug.Log($"Package spawned at {selectedNode.gridPosition}");
         }
         else
         {
@@ -71,12 +65,16 @@ public class Person : MonoBehaviour
         }
     }
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.CompareTag("Package"))
-    //     {
-    //         LeanPool.Despawn(other.gameObject);
-    //         Debug.Log($"Package collected by {gameObject.name}");
-    //     }
-    // }
+    private bool HasPackageOnNode(Node node)
+    {
+        Collider[] colliders = Physics.OverlapSphere(node.transform.position, 0.1f);
+        foreach (var collider in colliders)
+        {
+            if (collider.CompareTag("Package"))
+            {
+                return true; // Node already has a package
+            }
+        }
+        return false;
+    }
 }

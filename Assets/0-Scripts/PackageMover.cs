@@ -4,8 +4,8 @@ using UnityEngine;
 public class PackageMover : MonoBehaviour
 {
     //public bool _fromPersonA { get; set; }
-    [SerializeField][Range(10f, 30f)] private float _minSpeed = 10f;
-    [SerializeField][Range(10f, 30f)] private float _maxSpeed = 30f;
+    [SerializeField][Range(0f, 30f)] private float _minSpeed = 5f;
+    [SerializeField][Range(0f, 30f)] private float _maxSpeed = 30f;
     [SerializeField] public GameObject targetPerson;
 
     private float _speed;
