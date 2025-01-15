@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Lean.Pool;
 
 public class PackageMover : MonoBehaviour
 {
-    //public bool _fromPersonA { get; set; }
     [SerializeField][Range(0f, 30f)] private float _minSpeed = 5f;
     [SerializeField][Range(0f, 30f)] private float _maxSpeed = 30f;
     [SerializeField] public GameObject targetPerson;
@@ -12,29 +12,29 @@ public class PackageMover : MonoBehaviour
     private List<Node> _path = new List<Node>();
     private int _currentNodeIndex = 0;
 
-    private void Start()
+    // Reset method to initialize the package when pooled
+    public void Initialize(GameObject newTarget)
     {
-        // Set a random speed within the specified range
-        _speed = Random.Range(_minSpeed, _maxSpeed);
+        targetPerson = newTarget;
 
-        // Determine target person
-        //targetPerson = GameObject.FindGameObjectWithTag(_fromPersonA ? "PersonB" : "PersonA");
+        // Reset state
+        _path.Clear();
+        _currentNodeIndex = 0;
+        _speed = Random.Range(_minSpeed, _maxSpeed);
 
         if (targetPerson == null)
         {
-            Debug.LogError("Target person not found!");
+            Debug.LogError("Target person not assigned!");
             return;
         }
 
-        // Find the starting and ending nodes
+        // Find path
         Node startNode = FindClosestNode(transform.position);
         Node targetNode = FindClosestNode(targetPerson.transform.position);
 
         if (startNode != null && targetNode != null)
         {
-            // Get the path using a pathfinding algorithm
             _path = Pathfinding.FindPath(startNode, targetNode);
-
             if (_path.Count > 0)
             {
                 Debug.Log($"Path found from {startNode.name} to {targetNode.name}. Starting movement.");
@@ -52,7 +52,6 @@ public class PackageMover : MonoBehaviour
 
     private void Update()
     {
-        // Move along the path if it exists
         if (_path.Count > 0 && _currentNodeIndex < _path.Count)
         {
             MoveAlongPath();
@@ -64,26 +63,22 @@ public class PackageMover : MonoBehaviour
         Node targetNode = _path[_currentNodeIndex];
         Vector3 targetPosition = targetNode.transform.position;
 
-        // Move towards the current target node
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
 
-        // Check if we've reached the target node
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
             _currentNodeIndex++;
 
-            // If we've reached the final node, destroy the package
             if (_currentNodeIndex >= _path.Count)
             {
                 Debug.Log($"Package reached its destination: {targetPerson.name}");
-                Destroy(gameObject);
+                LeanPool.Despawn(gameObject);
             }
         }
     }
 
     private Node FindClosestNode(Vector3 position)
     {
-        // Find the closest node to the given position
         Node closestNode = null;
         float closestDistance = float.MaxValue;
 
