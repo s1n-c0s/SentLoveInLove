@@ -3,124 +3,114 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private Scene currentScene;
-    public static GameManager Instance; // Singleton instance of the GameManager
-    public GridGenerator gridGenerator; // Reference to the GridGenerator script
-    public Camera mainCamera;           // Reference to the main/top-down camera
-    public float zoomOutFactor = 1.5f;  // Factor to zoom out the camera (1.5 = 50% zoom-out)
+    public static GameManager Instance { get; private set; }
 
-    void Awake()
+    private GameLoop _gameLoop;
+    private UIManager _uiManager;
+
+    public enum GameState
     {
-        // Implement the Singleton pattern to ensure only one GameManager exists
+        MainMenu,
+        Playing,
+        Paused,
+        EndGame
+    }
+
+    private GameState currentState;
+
+    public delegate void OnGameStateChanged(GameState newState);
+    public static event OnGameStateChanged GameStateChanged;
+
+    private void Awake()
+    {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist GameManager across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
-            return; // Exit to avoid duplicate logic
+            return; // Prevent further execution in this instance
         }
 
-        // Get the current active scene
-        currentScene = SceneManager.GetActiveScene();
+        // Initialize references for the first scene
+        InitializeSceneReferences();
     }
 
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetApp();
-        }
-    }
-
-    void Start()
-    {
-        InitializeReferences();
-        GenerateGridAndAdjustCamera();
-    }
-
-    private void InitializeReferences()
-    {
-        // Find the grid generator and main camera dynamically if not assigned
-        if (gridGenerator == null)
-            gridGenerator = FindObjectOfType<GridGenerator>();
-
-        if (mainCamera == null)
-            mainCamera = Camera.main; // Get the main camera tagged as "MainCamera"
-
-        if (gridGenerator == null)
-            Debug.LogError("GridGenerator is not assigned or missing in the scene!");
-
-        if (mainCamera == null)
-            Debug.LogError("Main Camera is not assigned or missing in the scene!");
-    }
-
-    private void GenerateGridAndAdjustCamera()
-    {
-        if (gridGenerator == null || mainCamera == null) return;
-
-        // Generate the grid and adjust the camera at the start
-        gridGenerator.GenerateGrid();
-        AdjustCameraToFitGrid();
-    }
-
-    public void AdjustCameraToFitGrid()
-    {
-        if (gridGenerator == null || mainCamera == null)
-        {
-            Debug.LogError("GridGenerator or Main Camera is not assigned!");
-            return;
-        }
-
-        // Calculate the bounds of all targets in the grid
-        Bounds bounds = gridGenerator.CalculateGridBounds();
-
-        // Calculate the camera position and zoom
-        Vector3 center = bounds.center;
-        float size = Mathf.Max(bounds.size.x, bounds.size.z) / 2f; // Largest dimension
-        size *= zoomOutFactor; // Apply zoom-out factor
-
-        if (mainCamera.orthographic)
-        {
-            // Adjust orthographic size
-            mainCamera.orthographicSize = size;
-            mainCamera.transform.position = new Vector3(center.x, center.y + 10f, center.z); // Adjust height for orthographic
-        }
-        else
-        {
-            // Adjust perspective camera position
-            float distance = size / Mathf.Tan(Mathf.Deg2Rad * mainCamera.fieldOfView / 2f); // Perspective camera distance
-            mainCamera.transform.position = new Vector3(center.x, distance, center.z); // Top-down view
-        }
-
-        mainCamera.transform.LookAt(center); // Ensure the camera looks at the grid center
-
-        Debug.Log("Camera adjusted to fit the grid with zoom-out factor.");
-    }
-
-    public void ResetApp()
-    {
-        // Reload the current active scene
-        SceneManager.LoadScene(currentScene.buildIndex);
-    }
-
-    // Dynamically update references when a new scene is loaded
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        currentScene = SceneManager.GetActiveScene();
-        InitializeReferences(); // Reinitialize references
-        GenerateGridAndAdjustCamera(); // Regenerate grid and adjust the camera
-    }
-
-    void OnEnable()
-    {
+        // Subscribe to sceneLoaded event to reinitialize references after a scene loads
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        // Set the initial game state
+        ChangeState(GameState.MainMenu);
     }
 
-    void OnDisable()
+    private void OnDestroy()
     {
+        // Unsubscribe from the event to avoid memory leaks
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Reinitialize references whenever a new scene is loaded
+        InitializeSceneReferences();
+    }
+
+    public void InitializeSceneReferences()
+    {
+        _gameLoop = FindObjectOfType<GameLoop>();
+        _uiManager = FindObjectOfType<UIManager>();
+    }
+
+    public void ChangeState(GameState newState)
+    {
+        currentState = newState;
+
+        switch (currentState)
+        {
+            case GameState.MainMenu:
+                Debug.Log("Entering MainMenu state");
+                break;
+            case GameState.Playing:
+                Debug.Log("Entering Playing state");
+                HandlePlayingState();
+                break;
+            case GameState.Paused:
+                Debug.Log("Entering Paused state");
+                break;
+            case GameState.EndGame:
+                Debug.Log("Entering EndGame state");
+                break;
+        }
+
+        GameStateChanged?.Invoke(currentState);
+    }
+
+    private void HandlePlayingState()
+    {
+        if (_uiManager != null)
+        {
+            _uiManager.HideAllPanels();
+        }
+    }
+
+    public void TogglePause()
+    {
+        if (currentState == GameState.Playing)
+        {
+            ChangeState(GameState.Paused);
+        }
+        else if (currentState == GameState.Paused)
+        {
+            ChangeState(GameState.Playing);
+        }
+    }
+
+    public GameState GetCurrentState()
+    {
+        return currentState;
     }
 }

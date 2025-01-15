@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2883339837043071043}
   - component: {fileID: 7764259614845028082}
   - component: {fileID: 3133232885458096857}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mesh
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 337968250128462691}
   - component: {fileID: 427619776915663761}
   - component: {fileID: 3725747528933349130}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pixel
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -150,5 +150,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b4300b69ad4d2444ab3542f81828187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverHeight: 2.5
+  hoverHeight: 1.2
   returnSpeed: 1

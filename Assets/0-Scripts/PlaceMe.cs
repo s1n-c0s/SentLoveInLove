@@ -1,108 +1,64 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Lean.Pool;
+using System.Collections.Generic;
 
 public class PlaceMe : MonoBehaviour
 {
-    [SerializeField] private GameObject Aprefab; // Prefab for the sender
-    [SerializeField] private GameObject Bprefab; // Prefab for the receiver
-    [SerializeField] private GridGenerator gridGenerator; // Reference to the GridGenerator script
+    [SerializeField] private GameObject _prefabA;
+    [SerializeField] private GameObject _prefabB;
 
-    private GameObject senderInstance;
-    private GameObject receiverInstance;
+    public bool CanPlace { get; set; }
+    public bool PlacementComplete => placedCount >= MaxPlacedCount;
 
-    private bool placingSender = true; // Determines whether placing sender or receiver
+    private bool isNextPrefabA = true;
+    private int placedCount = 0;
+    private const int MaxPlacedCount = 2;
+    private HashSet<Node> occupiedNodes = new HashSet<Node>();
+    private List<Person> placedPersons = new List<Person>();
 
-    void Start()
+    private void Update()
     {
-        InitializeReferences();
-
-        Debug.Log("Click on a grid tile to place the sender (Aprefab).");
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0)) // Detect left mouse button click
+        if (CanPlace)
         {
-            PlaceObjectWithMouse();
+            SelectLocation();
         }
     }
 
-    private void InitializeReferences()
+    private void SelectLocation()
     {
-        // Dynamically assign gridGenerator if it's missing
-        if (gridGenerator == null)
-        {
-            gridGenerator = FindObjectOfType<GridGenerator>();
-            if (gridGenerator == null)
-            {
-                Debug.LogError("GridGenerator is not assigned or missing in the scene!");
-                return;
-            }
-        }
+        if (PlacementComplete) return;
 
-        // Check for missing prefabs
-        if (Aprefab == null || Bprefab == null)
-        {
-            Debug.LogError("Prefabs are not assigned in the inspector!");
-        }
-    }
+        if (!Input.GetMouseButtonDown(0)) return;
 
-    private void PlaceObjectWithMouse()
-    {
-        // Raycast to detect the clicked tile
-        Camera mainCamera = Camera.main;
-        if (mainCamera == null)
-        {
-            Debug.LogError("Main Camera is not found or missing in the scene!");
-            return;
-        }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Tile"))) return;
 
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            // Check if the clicked object is a grid tile
-            if (hit.collider != null && gridGenerator.TargetGroupList.Contains(hit.collider.gameObject))
-            {
-                Vector3 position = hit.collider.gameObject.transform.position;
+        Node node = hit.collider.GetComponent<Node>();
+        if (node == null || !node.isWalkable || occupiedNodes.Contains(node)) return;
 
-                if (placingSender)
-                {
-                    // Place sender (Aprefab) if not already placed
-                    if (senderInstance == null)
-                    {
-                        senderInstance = Lean.Pool.LeanPool.Spawn(Aprefab, position, Quaternion.identity);
-                        Debug.Log("Sender (Aprefab) placed. Now click to place the receiver (Bprefab).");
-                        placingSender = false;
-                    }
-                }
-                else
-                {
-                    // Place receiver (Bprefab) if not already placed
-                    if (receiverInstance == null && senderInstance != null && senderInstance.transform.position != position)
-                    {
-                        receiverInstance = Lean.Pool.LeanPool.Spawn(Bprefab, position, Quaternion.identity);
-                        Debug.Log("Receiver (Bprefab) placed.");
-                        placingSender = true; // Reset to placing sender if needed
-                    }
-                }
-            }
+        Vector3 centerPosition = node.transform.position;
+        GameObject prefabToSpawn = isNextPrefabA ? _prefabA : _prefabB;
+
+        if (prefabToSpawn == null) return;
+
+        GameObject spawnedObject = LeanPool.Spawn(prefabToSpawn, centerPosition, Quaternion.identity);
+        spawnedObject.transform.SetParent(node.transform);
+        Debug.Log($"{prefabToSpawn.name} placed at {centerPosition}");
+
+        isNextPrefabA = !isNextPrefabA;
+        placedCount++;
+        occupiedNodes.Add(node);
+
+        Person person = spawnedObject.GetComponent<Person>();
+        if (person != null)
+        {
+            person.Initialize(node);
+            placedPersons.Add(person);
         }
     }
 
-    // Handle scene reload to reinitialize references
-    private void OnEnable()
+    public List<Person> GetPlacedPersons()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        Debug.Log("Scene reloaded. Reinitializing references...");
-        InitializeReferences();
+        return new List<Person>(placedPersons);
     }
 }
