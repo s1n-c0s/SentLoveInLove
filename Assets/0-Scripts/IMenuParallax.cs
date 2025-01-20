@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MenuParallax : MonoBehaviour
+public class IMenuParallax : MonoBehaviour
 {
     public float offsetMultiplier = 1f; // How far the parallax effect should move
     public float smoothTime = 0.3f; // How smooth the movement is
