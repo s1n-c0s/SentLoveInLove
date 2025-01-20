@@ -12,17 +12,24 @@ public class PackageManager : MonoBehaviour
         if (_package.Count == 0) return;
 
         // Randomly pick a package from the list
-        GameObject package = _package[Random.Range(0, _package.Count)];
-        if (gameObject.CompareTag("PersonA"))
+        GameObject packagePrefab = _package[Random.Range(0, _package.Count)];
+
+        // Spawn the package using Lean Pool
+        GameObject spawnedPackage = LeanPool.Spawn(packagePrefab, position, Quaternion.identity);
+
+        // Set the target for the PackageMover component
+        PackageMover packageMover = spawnedPackage.GetComponent<PackageMover>();
+        if (packageMover != null)
         {
-            package.GetComponent<PackageMover>().targetPerson = GameObject.FindGameObjectWithTag("PersonB");
+            if (gameObject.CompareTag("PersonA"))
+            {
+                packageMover.Initialize(GameObject.FindGameObjectWithTag("PersonB"));
+            }
+            else if (gameObject.CompareTag("PersonB"))
+            {
+                packageMover.Initialize(GameObject.FindGameObjectWithTag("PersonA"));
+            }
         }
-        else if (gameObject.CompareTag("PersonB"))
-        {
-            package.GetComponent<PackageMover>().targetPerson = GameObject.FindGameObjectWithTag("PersonA");
-        }
-        // Use LeanPool to spawn the package
-        LeanPool.Spawn(package, position, Quaternion.identity);
 
         Debug.Log($"Package spawned at {position}");
     }
