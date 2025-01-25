@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
         {
             _uiManager.HideAllPanels();
         }
+        _uiManager.ShowPanel("GameplayPanel");
     }
 
     public void TogglePause()
