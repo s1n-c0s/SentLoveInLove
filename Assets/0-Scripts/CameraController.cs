@@ -1,20 +1,26 @@
 using UnityEngine;
 using Cinemachine;
-//using UnityEngine.SceneManagement;
 
 public class CameraController : MonoBehaviour
 {
-    public GridGenerator gridGenerator; // Reference to the GridGenerator
-    public CinemachineVirtualCamera virtualCamera; // Reference to the Cinemachine Virtual Camera
-    public float zoomOutFactor = 1.2f; // Factor to zoom out the camera
+    [SerializeField]
+    private GridGenerator gridGenerator; // Reference to the GridGenerator
+
+    [SerializeField]
+    private CinemachineVirtualCamera virtualCamera; // Reference to the Cinemachine Virtual Camera
+
+    [SerializeField]
+    private float zoomOutFactor = 1.2f; // Factor to zoom out the camera
+
+    [SerializeField]
+    private float birdEyeAngle = 45f; // Angle for the bird's eye view (default: 45 degrees)
 
     private void Start()
     {
         InitializeSceneReferences();
-        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public void AdjustCameraToFitGrid()
+    public void FocusOnTargets()
     {
         if (gridGenerator == null || virtualCamera == null)
         {
@@ -25,39 +31,40 @@ public class CameraController : MonoBehaviour
         // Calculate the bounds of all targets in the grid
         Bounds bounds = gridGenerator.CalculateGridBounds();
 
-        // Calculate the camera position and zoom
+        // Calculate the camera position and zoom to capture the entire grid
         Vector3 center = bounds.center;
-        float size = Mathf.Max(bounds.size.x, bounds.size.z) / 2f; // Largest dimension
-        size *= zoomOutFactor; // Apply zoom-out factor
+        float size = Mathf.Max(bounds.size.x, bounds.size.z);
 
         // Adjust the orthographic size for the virtual camera
-        virtualCamera.m_Lens.OrthographicSize = size;
+        virtualCamera.m_Lens.OrthographicSize = size * zoomOutFactor;
 
-        // Set the virtual camera position
-        virtualCamera.transform.position = new Vector3(center.x, size + 5f, center.z); // Adjust height for a better view
+        // Move the camera in or out if the target is not visible
+        float targetSize = size / 3;
+        if (targetSize > virtualCamera.m_Lens.OrthographicSize)
+        {
+            virtualCamera.m_Lens.OrthographicSize = targetSize;
+        }
+        else
+        {
+            virtualCamera.m_Lens.OrthographicSize *= 0.9f;
+        }
 
-        // Ensure the camera looks at the grid center
-        virtualCamera.transform.LookAt(center);
+        // Change the camera focus to the center of the grid
+        Vector3 cameraPosition = center;
+        cameraPosition.z = -virtualCamera.m_Lens.OrthographicSize * (1 / Mathf.Tan(virtualCamera.m_Lens.FieldOfView * Mathf.Deg2Rad));
+        cameraPosition.y = virtualCamera.m_Lens.OrthographicSize * Mathf.Sin(birdEyeAngle * Mathf.Deg2Rad);
 
-        // Debug.Log("Camera adjusted to fit the grid with zoom-out factor.");
+        virtualCamera.transform.position = cameraPosition;
+
+        virtualCamera.LookAt = new GameObject("CameraFocus").transform;
+        virtualCamera.LookAt.position = center;
     }
-
 
     private void InitializeSceneReferences()
     {
         gridGenerator = FindAnyObjectByType<GridGenerator>();
         virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
     }
-
-    // private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    // {
-    //     // Reinitialize references whenever a new scene is loaded
-    //     InitializeSceneReferences();
-    // }
-
-    // private void OnDestroy()
-    // {
-    //     // Unsubscribe from the event to avoid memory leaks
-    //     SceneManager.sceneLoaded -= OnSceneLoaded;
-    // }
 }
+
+

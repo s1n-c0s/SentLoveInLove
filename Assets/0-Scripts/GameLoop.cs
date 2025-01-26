@@ -25,7 +25,7 @@ public class GameLoop : MonoBehaviour
     {
         GameManager.Instance.ChangeState(GameManager.GameState.Playing);
         gridGenerator.GenerateGrid();
-        cameraController.AdjustCameraToFitGrid();
+        cameraController.FocusOnTargets();
         _placeMe.CanPlace = true;
     }
 
