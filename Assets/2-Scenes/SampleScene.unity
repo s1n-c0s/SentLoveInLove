@@ -198,7 +198,7 @@ Camera:
   far clip plane: 1000
   field of view: 60.000004
   orthographic: 0
-  orthographic size: 33.66
+  orthographic size: 40.194
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -864,16 +864,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2276510378960458318, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: _spacing
-      value: 2.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2276510378960458318, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: _gridSize
-      value: 18
-      objectReference: {fileID: 0}
     - target: {fileID: 4558673007692678474, guid: 2d216679465f49c4a9ef7236de2cf964,
         type: 3}
       propertyPath: m_Name
@@ -928,31 +918,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8158242319483340179, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: m_TrackedObjectOffset.y
-      value: -6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8252041661399134946, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: zoomOutFactor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8412102544605256987, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: m_Lens.OrthographicSize
-      value: 33.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 9058586213529513952, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: packageManager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9058586213529513952, guid: 2d216679465f49c4a9ef7236de2cf964,
-        type: 3}
-      propertyPath: _packageManager
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1436,7 +1401,7 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 587477855}
   - {fileID: 832575519}
-  - {fileID: 5552891027832635163}
   - {fileID: 418042355}
   - {fileID: 738973454}
   - {fileID: 5887462648894016969}
+  - {fileID: 5552891027832635163}
