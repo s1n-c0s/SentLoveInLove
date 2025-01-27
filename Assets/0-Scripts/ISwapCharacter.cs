@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ISwapCharacter : MonoBehaviour
 {
+    public bool _isPersonA;
     [SerializeField] private IComponent[] _SelectCharacter;
 
     [System.Serializable]
@@ -36,6 +37,15 @@ public class ISwapCharacter : MonoBehaviour
         if (_SelectCharacter.Length > 0)
         {
             SetSprites(_SelectCharacter[_characterIndex]);
+        }
+
+        if (gameObject.CompareTag("PersonA"))
+        {
+            _isPersonA = true;
+        }
+        else if (gameObject.CompareTag("PersonB"))
+        {
+            _isPersonA = false;
         }
     }
 

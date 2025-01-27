@@ -229,6 +229,7 @@ GameObject:
   - component: {fileID: 1530749220818513650}
   - component: {fileID: 8252041661399134946}
   - component: {fileID: 9058586213529513952}
+  - component: {fileID: 8455769936840926664}
   m_Layer: 0
   m_Name: GameLogic
   m_TagString: Untagged
@@ -299,3 +300,22 @@ MonoBehaviour:
   _prefabA: {fileID: 631714083673296417, guid: 349da6a757ffb1540bdef2073d812dbc, type: 3}
   _prefabB: {fileID: 4496435558651969489, guid: 0ae6fe68b97ff8a46969cb3f74be8e01,
     type: 3}
+--- !u!114 &8455769936840926664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4558673007692678474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aea1e949223ee146bb48eadd884a21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData:
+    _playerNameA: 
+    _playerScoreA: 0
+    _selectCharacterA: 0
+    _playerNameB: 
+    _playerScoreB: 0
+    _selectCharacterB: 0

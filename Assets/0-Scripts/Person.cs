@@ -4,8 +4,47 @@ using UnityEngine;
 
 public class Person : MonoBehaviour
 {
+    [SerializeField] private List<GameObject> _playerVisuals;
+    [SerializeField] private bool isPersonA;
+    private int _selectedCharacterIndex;
     [SerializeField] private PackageManager _packageManager;
     private Node _currentNode;
+
+    private void Awake()
+    {
+        if (CompareTag("PersonA"))
+        {
+            isPersonA = true;
+        }
+        else if (CompareTag("PersonB"))
+        {
+            isPersonA = false;
+        }
+
+        if (isPersonA)
+        {
+            _selectedCharacterIndex = PlayerDataManager.Instance.playerData.SelectCharacterA;
+        }
+        else
+        {
+            _selectedCharacterIndex = PlayerDataManager.Instance.playerData.SelectCharacterB;
+        }
+
+        if (_playerVisuals.Count > 0)
+        {
+            SetVisuals(_playerVisuals[_selectedCharacterIndex]);
+        }
+    }
+
+    private void SetVisuals(GameObject gameObject)
+    {
+        foreach (var visual in _playerVisuals)
+        {
+            visual.SetActive(false);
+        }
+
+        gameObject.SetActive(true);
+    }
 
     public void Initialize(Node assignedNode)
     {
@@ -16,7 +55,7 @@ public class Person : MonoBehaviour
     {
         if (_currentNode == null || _packageManager == null)
         {
-            Debug.LogWarning($"{gameObject.name} cannot spawn packages because of missing data.");
+            Debug.LogError("CurrentNode or PackageManager is null.");
             return;
         }
 
