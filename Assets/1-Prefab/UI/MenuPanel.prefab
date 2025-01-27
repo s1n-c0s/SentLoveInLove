@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be062ba24e21d1d4fa0a56e72fecfdec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isPersonA: 0
   _SelectCharacter:
   - characterSprite: {fileID: 21300000, guid: 1078fbf3829492744a08b5209157668a, type: 3}
     iconSprite: {fileID: 21300000, guid: d29f95c0ae9696d489185e0ee744071c, type: 3}
@@ -698,6 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be062ba24e21d1d4fa0a56e72fecfdec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isPersonA: 0
   _SelectCharacter:
   - characterSprite: {fileID: 21300000, guid: ca55c1788bc29054985f7f7fd79b844e, type: 3}
     iconSprite: {fileID: 21300000, guid: 1f26fc533c583b54f9dcfd0073977504, type: 3}
@@ -951,7 +953,7 @@ MonoBehaviour:
   lastKnownText: "Name\u200B"
   outputString: Name
   lastWordCount: 1
-  guiMode: 0
+  guiMode: 2
   guiColor: {r: 0, g: 0.5, b: 0.8, a: 1}
   isInitialized: 1
 --- !u!222 &2949063363661333975
@@ -1652,7 +1654,7 @@ MonoBehaviour:
   lastKnownText: "Name\u200B"
   outputString: Name
   lastWordCount: 1
-  guiMode: 0
+  guiMode: 2
   guiColor: {r: 0, g: 0.5, b: 0.8, a: 1}
   isInitialized: 1
 --- !u!222 &5506977338896977922
