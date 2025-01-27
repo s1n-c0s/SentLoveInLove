@@ -12,7 +12,7 @@ public class GameSetting : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             ResetApp();
         }
