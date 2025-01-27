@@ -85,7 +85,7 @@ MonoBehaviour:
   _playerVisuals:
   - {fileID: 3364405156627802871}
   - {fileID: 5812070604491343641}
-  _swapCharacter: {fileID: 0}
+  isPersonA: 1
   _packageManager: {fileID: -5533802584271330167}
 --- !u!114 &-5533802584271330167
 MonoBehaviour:

@@ -62,6 +62,7 @@ public class ISwapCharacter : MonoBehaviour
 
         // Set the sprites for the next character
         SetSprites(_SelectCharacter[_characterIndex]);
+        SwapCharacter(_characterIndex);
     }
 
     private void SetSprites(IComponent component)
@@ -95,5 +96,21 @@ public class ISwapCharacter : MonoBehaviour
         {
             SetSprites(_SelectCharacter[_characterIndex]);
         }
+    }
+
+    public void SwapCharacter(int characterIndex)
+    {
+        if (_isPersonA)
+        {
+            PlayerDataManager.Instance.UpdateSelectCharacterA(characterIndex);
+        }
+        else
+        {
+            PlayerDataManager.Instance.UpdateSelectCharacterB(characterIndex);
+        }
+
+        // Update visuals
+        characterImage.sprite = _SelectCharacter[characterIndex].characterSprite;
+        iconImage.sprite = _SelectCharacter[characterIndex].iconSprite;
     }
 }

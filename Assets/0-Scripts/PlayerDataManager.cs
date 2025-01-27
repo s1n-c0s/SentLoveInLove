@@ -63,4 +63,20 @@ public class PlayerDataManager : MonoBehaviour
         // Example:
         // playerData = new PlayerData(loadedNameA, loadedScoreA, loadedCharacterA, loadedNameB, loadedScoreB, loadedCharacterB);
     }
+
+    public void UpdateSelectCharacterA(int selectCharacterA)
+    {
+        if (playerData != null)
+        {
+            playerData = new PlayerData(playerData.PlayerNameA, playerData.PlayerScoreA, selectCharacterA, playerData.PlayerNameB, playerData.PlayerScoreB, playerData.SelectCharacterB);
+        }
+    }
+
+    public void UpdateSelectCharacterB(int selectCharacterB)
+    {
+        if (playerData != null)
+        {
+            playerData = new PlayerData(playerData.PlayerNameA, playerData.PlayerScoreA, playerData.SelectCharacterA, playerData.PlayerNameB, playerData.PlayerScoreB, selectCharacterB);
+        }
+    }
 }

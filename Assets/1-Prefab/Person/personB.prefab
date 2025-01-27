@@ -10,6 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -7084180893931022771, guid: 349da6a757ffb1540bdef2073d812dbc,
         type: 3}
+      propertyPath: isPersonA
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7084180893931022771, guid: 349da6a757ffb1540bdef2073d812dbc,
+        type: 3}
       propertyPath: _playerVisuals.Array.data[0]
       value: 
       objectReference: {fileID: 7352794509247624937}
