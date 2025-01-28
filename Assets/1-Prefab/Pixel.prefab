@@ -213,7 +213,7 @@ MonoBehaviour:
     probability: 9.1
   obstacleVisuals:
   - visual: {fileID: 405107448763571967}
-    probability: 27.2
+    probability: 43.3
   - visual: {fileID: 7270083177640931173}
     probability: 17.2
   - visual: {fileID: 3415091655283625337}
