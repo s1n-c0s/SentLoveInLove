@@ -4,7 +4,8 @@ using System.Collections.Generic;
 public class GridGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject _cubePrefab;
-    [SerializeField] private int _gridSize = 10;
+    [SerializeField] private int _gridWidth = 20;
+    [SerializeField] private int _gridHeight = 10;
     [SerializeField] private float _spacing = 1.1f;
     [SerializeField][Range(0, 100)] private int _unwalkableChancePercent = 15; // Percentage chance for unwalkable nodes
 
@@ -24,11 +25,11 @@ public class GridGenerator : MonoBehaviour
 
         ClearGrid();
 
-        _nodeGrid = new Node[_gridSize, _gridSize];
+        _nodeGrid = new Node[_gridWidth, _gridHeight];
 
-        for (int x = 0; x < _gridSize; x++)
+        for (int x = 0; x < _gridWidth; x++)
         {
-            for (int z = 0; z < _gridSize; z++)
+            for (int z = 0; z < _gridHeight; z++)
             {
                 Vector3 position = new Vector3(x * _spacing, 0, z * _spacing);
                 GameObject cube = Lean.Pool.LeanPool.Spawn(_cubePrefab, position, Quaternion.identity, transform);
@@ -43,7 +44,7 @@ public class GridGenerator : MonoBehaviour
         ConnectNodes();
         RandomizeWalkability();
         _isGridGenerated = true;
-        Debug.Log($"{_gridSize * _gridSize} cubes generated and nodes connected.");
+        Debug.Log($"{_gridWidth * _gridHeight} cubes generated and nodes connected.");
     }
 
     public void ClearGrid()
@@ -63,16 +64,16 @@ public class GridGenerator : MonoBehaviour
 
     private void ConnectNodes()
     {
-        for (int x = 0; x < _gridSize; x++)
+        for (int x = 0; x < _gridWidth; x++)
         {
-            for (int z = 0; z < _gridSize; z++)
+            for (int z = 0; z < _gridHeight; z++)
             {
                 Node currentNode = _nodeGrid[x, z];
 
                 if (x > 0) currentNode.AddNeighbor(_nodeGrid[x - 1, z]); // Left
-                if (x < _gridSize - 1) currentNode.AddNeighbor(_nodeGrid[x + 1, z]); // Right
+                if (x < _gridWidth - 1) currentNode.AddNeighbor(_nodeGrid[x + 1, z]); // Right
                 if (z > 0) currentNode.AddNeighbor(_nodeGrid[x, z - 1]); // Down
-                if (z < _gridSize - 1) currentNode.AddNeighbor(_nodeGrid[x, z + 1]); // Up
+                if (z < _gridHeight - 1) currentNode.AddNeighbor(_nodeGrid[x, z + 1]); // Up
             }
         }
     }
@@ -215,3 +216,4 @@ public class GridGenerator : MonoBehaviour
         return bounds;
     }
 }
+
