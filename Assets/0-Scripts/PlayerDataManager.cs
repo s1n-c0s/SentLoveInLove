@@ -30,6 +30,16 @@ public class PlayerData
     public string PlayerNameB { get { return _playerNameB; } }
     public int PlayerScoreB { get { return _playerScoreB; } }
     public int SelectCharacterB { get { return _selectCharacterB; } }
+
+    public void UpdateSelectCharacterA(int selectCharacterA)
+    {
+        _selectCharacterA = selectCharacterA;
+    }
+
+    public void UpdateSelectCharacterB(int selectCharacterB)
+    {
+        _selectCharacterB = selectCharacterB;
+    }
 }
 
 public class PlayerDataManager : MonoBehaviour
@@ -68,7 +78,7 @@ public class PlayerDataManager : MonoBehaviour
     {
         if (playerData != null)
         {
-            playerData = new PlayerData(playerData.PlayerNameA, playerData.PlayerScoreA, selectCharacterA, playerData.PlayerNameB, playerData.PlayerScoreB, playerData.SelectCharacterB);
+            playerData.UpdateSelectCharacterA(selectCharacterA);
         }
     }
 
@@ -76,7 +86,7 @@ public class PlayerDataManager : MonoBehaviour
     {
         if (playerData != null)
         {
-            playerData = new PlayerData(playerData.PlayerNameA, playerData.PlayerScoreA, playerData.SelectCharacterA, playerData.PlayerNameB, playerData.PlayerScoreB, selectCharacterB);
+            playerData.UpdateSelectCharacterB(selectCharacterB);
         }
     }
 }
