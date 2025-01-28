@@ -1,22 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ISwapCharacter : MonoBehaviour
 {
-    public bool _isPersonA;
-    [SerializeField] private IComponent[] _SelectCharacter;
+    public bool isPersonA;
+    [SerializeField] private CharacterComponent[] characterComponents;
 
     [System.Serializable]
-    public class IComponent
+    public class CharacterComponent
     {
         public Sprite characterSprite;
         public Sprite iconSprite;
         public Sprite boxSprite;
         public bool flipX;
 
-        public IComponent(Sprite characterSprite, Sprite iconSprite, Sprite boxSprite, bool flipX = false)
+        public CharacterComponent(Sprite characterSprite, Sprite iconSprite, Sprite boxSprite, bool flipX = false)
         {
             this.characterSprite = characterSprite;
             this.iconSprite = iconSprite;
@@ -29,88 +28,87 @@ public class ISwapCharacter : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private Image boxImage;
 
-    public int _characterIndex = 0;
+    private int characterIndex = 0;
 
     private void Start()
     {
-        // Set the first character sprites
-        if (_SelectCharacter.Length > 0)
+        if (characterComponents.Length > 0)
         {
-            SetSprites(_SelectCharacter[_characterIndex]);
+            SetSprites(characterComponents[characterIndex]);
         }
 
-        if (gameObject.CompareTag("PersonA"))
-        {
-            _isPersonA = true;
-        }
-        else if (gameObject.CompareTag("PersonB"))
-        {
-            _isPersonA = false;
-        }
+        // if (gameObject.CompareTag("PersonA"))
+        // {
+        //     isPersonA = true;
+        // }
+        // else if (gameObject.CompareTag("PersonB"))
+        // {
+        //     isPersonA = false;
+        // }
     }
 
     public void ToggleCharacter()
     {
-        if (_SelectCharacter == null || _SelectCharacter.Length == 0)
+        if (characterComponents == null || characterComponents.Length == 0)
         {
             Debug.LogError("No components assigned.");
             return;
         }
 
-        // Move to next character
-        _characterIndex = (_characterIndex + 1) % _SelectCharacter.Length;
+        characterIndex = (characterIndex + 1) % characterComponents.Length;
 
-        // Set the sprites for the next character
-        SetSprites(_SelectCharacter[_characterIndex]);
-        SwapCharacter(_characterIndex);
+        SetSprites(characterComponents[characterIndex]);
+        SwapCharacter(characterIndex);
     }
 
-    private void SetSprites(IComponent component)
+    private void SetSprites(CharacterComponent component)
     {
         characterImage.sprite = component.characterSprite;
         iconImage.sprite = component.iconSprite;
         boxImage.sprite = component.boxSprite;
 
-        // Apply random rotation within ±5 degrees to characterImage only
         float randomRotation = Random.Range(-5f, 5f);
         characterImage.transform.rotation = Quaternion.Euler(0, 0, randomRotation);
 
-        // Reset rotation for boxImage
         boxImage.transform.rotation = Quaternion.identity;
 
-        // Apply flip settings while maintaining the original size set in the inspector
-        Vector3 originalCharacterScale = characterImage.rectTransform.localScale;
-        characterImage.rectTransform.localScale = new Vector3(component.flipX ? -Mathf.Abs(originalCharacterScale.x) : Mathf.Abs(originalCharacterScale.x), originalCharacterScale.y, originalCharacterScale.z);
-
-        Vector3 originalIconScale = iconImage.rectTransform.localScale;
-        iconImage.rectTransform.localScale = new Vector3(component.flipX ? -Mathf.Abs(originalIconScale.x) : Mathf.Abs(originalIconScale.x), originalIconScale.y, originalIconScale.z);
+        ApplyFlipSettings(characterImage.rectTransform, component.flipX);
+        ApplyFlipSettings(iconImage.rectTransform, component.flipX);
     }
 
-    // Method to set the _SelectCharacter array
-    public void SetComponents(IComponent[] components)
+    private void ApplyFlipSettings(RectTransform rectTransform, bool flipX)
     {
-        _SelectCharacter = components;
+        Vector3 originalScale = rectTransform.localScale;
+        rectTransform.localScale = new Vector3(flipX ? -Mathf.Abs(originalScale.x) : Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+    }
 
-        // Set the first character sprites
-        if (_SelectCharacter.Length > 0)
+    public void SetComponents(CharacterComponent[] components)
+    {
+        characterComponents = components;
+
+        if (characterComponents.Length > 0)
         {
-            SetSprites(_SelectCharacter[_characterIndex]);
+            SetSprites(characterComponents[characterIndex]);
         }
     }
 
-    public void SwapCharacter(int characterIndex)
+    public void SwapCharacter(int index)
     {
-        if (_isPersonA)
+        if (isPersonA)
         {
-            PlayerDataManager.Instance.UpdateSelectCharacterA(characterIndex);
+            PlayerDataManager.Instance.UpdateSelectCharacterA(index);
         }
         else
         {
-            PlayerDataManager.Instance.UpdateSelectCharacterB(characterIndex);
+            PlayerDataManager.Instance.UpdateSelectCharacterB(index);
         }
 
-        // Update visuals
-        characterImage.sprite = _SelectCharacter[characterIndex].characterSprite;
-        iconImage.sprite = _SelectCharacter[characterIndex].iconSprite;
+        UpdateVisuals(index);
+    }
+
+    private void UpdateVisuals(int index)
+    {
+        characterImage.sprite = characterComponents[index].characterSprite;
+        iconImage.sprite = characterComponents[index].iconSprite;
     }
 }
