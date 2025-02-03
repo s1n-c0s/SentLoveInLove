@@ -14,7 +14,7 @@ public class LandCheck : MonoBehaviour
     [SerializeField] private List<VisualProbability> GroundVisuals;
     [SerializeField] private List<VisualProbability> obstacleVisuals;
     [SerializeField] private Node node;
-    [SerializeField] private BoxCollider collider;
+    [SerializeField] private new BoxCollider collider;
 
     private void Start()
     {
