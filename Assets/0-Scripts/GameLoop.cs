@@ -31,39 +31,40 @@ public class GameLoop : MonoBehaviour
 
     private void Update()
     {
-        // Random package spawning for Person A when "I" is pressed
-        if (Input.GetKeyDown(KeyCode.I))
+        if (_placeMe.PlacementComplete)
         {
-            SpawnPackagesForPerson(0); // First person (Person A)
-        }
+            // Random package spawning for Person A when "I" is pressed
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                PlayerDataManager.Instance.IncrementButtonPressA();
+                SpawnPackagesForPerson(0); // First person (Person A)
+            }
 
-        // Random package spawning for Person B when "U" is pressed
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            SpawnPackagesForPerson(1); // Second person (Person B)
+            // Random package spawning for Person B when "U" is pressed
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                PlayerDataManager.Instance.IncrementButtonPressB();
+                SpawnPackagesForPerson(1); // Second person (Person B)
+            }
         }
     }
 
     private void SpawnPackagesForPerson(int personIndex)
     {
-        if (_placeMe.PlacementComplete)
-        {
-            placedPersons = _placeMe.GetPlacedPersons();
 
-            if (personIndex < placedPersons.Count)
-            {
-                Person person = placedPersons[personIndex];
-                Debug.Log($"Spawning packages around {person.name}...");
-                person.SpawnPackageAroundSelf();
-            }
-            else
-            {
-                Debug.LogWarning($"Person at index {personIndex} not found!");
-            }
+        placedPersons = _placeMe.GetPlacedPersons();
+
+        if (personIndex < placedPersons.Count)
+        {
+            Person person = placedPersons[personIndex];
+            Debug.Log($"Spawning packages around {person.name}...");
+            person.SpawnPackageAroundSelf();
         }
         else
         {
-            Debug.LogWarning("Placement phase is not complete. Cannot spawn packages.");
+            Debug.LogWarning($"Person at index {personIndex} not found!");
         }
+
+
     }
 }
