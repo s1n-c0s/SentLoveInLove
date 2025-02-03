@@ -173,6 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentOwner: 0
+  personAMaterial: {fileID: 2100000, guid: a6a9daffd97df7545b640ad5f896c383, type: 2}
+  personBMaterial: {fileID: 2100000, guid: 371caa249f4c6d4418ab241f4b60688b, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 7f0945d276e7ac449965fe5d2eb7bd1e, type: 2}
+  tileRenderer: {fileID: 5591130169913465262}
 --- !u!65 &427619776915663761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -584,6 +588,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29e2a1de97b4cbf48bb160e0a3d7707b, type: 3}
+--- !u!23 &5591130169913465262 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 766070434397431617, guid: 29e2a1de97b4cbf48bb160e0a3d7707b,
+    type: 3}
+  m_PrefabInstance: {fileID: 5131304512360382191}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6239547291548973179 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1270399307217864340, guid: 29e2a1de97b4cbf48bb160e0a3d7707b,
