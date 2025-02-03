@@ -34,14 +34,14 @@ public class GameLoop : MonoBehaviour
         if (_placeMe.PlacementComplete)
         {
             // Random package spawning for Person A when "I" is pressed
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.U))
             {
                 PlayerDataManager.Instance.IncrementButtonPressA();
                 SpawnPackagesForPerson(0); // First person (Person A)
             }
 
             // Random package spawning for Person B when "U" is pressed
-            if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.I))
             {
                 PlayerDataManager.Instance.IncrementButtonPressB();
                 SpawnPackagesForPerson(1); // Second person (Person B)
