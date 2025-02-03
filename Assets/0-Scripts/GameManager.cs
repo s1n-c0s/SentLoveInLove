@@ -31,31 +31,25 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            return; // Prevent further execution in this instance
+            return;
         }
 
-        // Initialize references for the first scene
         InitializeSceneReferences();
     }
 
     private void Start()
     {
-        // Subscribe to sceneLoaded event to reinitialize references after a scene loads
         SceneManager.sceneLoaded += OnSceneLoaded;
-
-        // Set the initial game state
         ChangeState(GameState.MainMenu);
     }
 
     private void OnDestroy()
     {
-        // Unsubscribe from the event to avoid memory leaks
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reinitialize references whenever a new scene is loaded
         InitializeSceneReferences();
     }
 
@@ -94,8 +88,8 @@ public class GameManager : MonoBehaviour
         if (_uiManager != null)
         {
             _uiManager.HideAllPanels();
+            _uiManager.ShowPanel("GameplayPanel");
         }
-        _uiManager.ShowPanel("GameplayPanel");
     }
 
     public void TogglePause()

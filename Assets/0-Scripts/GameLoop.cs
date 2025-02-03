@@ -3,22 +3,29 @@ using UnityEngine;
 
 public class GameLoop : MonoBehaviour
 {
+    [SerializeField] private float gameTimeLimit = 35f;
     public GridGenerator gridGenerator;
     public CameraController cameraController;
-
     [SerializeField] private PlaceMe _placeMe;
+
     private List<Person> placedPersons;
+    private float gameTime;
+
+    private void Awake()
+    {
+        InitializeSceneReferences();
+    }
+
+    private void Start()
+    {
+        gameTime = 0f;
+    }
 
     private void InitializeSceneReferences()
     {
         gridGenerator = FindAnyObjectByType<GridGenerator>();
         cameraController = GetComponent<CameraController>();
         _placeMe = GetComponent<PlaceMe>();
-    }
-
-    private void Start()
-    {
-        InitializeSceneReferences();
     }
 
     public void StartGame()
@@ -31,16 +38,36 @@ public class GameLoop : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
+        {
+            if (_placeMe.PlacementComplete)
+            {
+                UpdateGameTime();
+            }
+            HandlePlacementInput();
+        }
+    }
+
+    private void UpdateGameTime()
+    {
+        gameTime += Time.deltaTime;
+        Debug.Log(gameTime);
+        if (gameTime >= gameTimeLimit)
+        {
+            GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
+        }
+    }
+
+    private void HandlePlacementInput()
+    {
         if (_placeMe.PlacementComplete)
         {
-            // Random package spawning for Person A when "I" is pressed
             if (Input.GetKeyDown(KeyCode.U))
             {
                 PlayerDataManager.Instance.IncrementButtonPressA();
                 SpawnPackagesForPerson(0); // First person (Person A)
             }
 
-            // Random package spawning for Person B when "U" is pressed
             if (Input.GetKeyDown(KeyCode.I))
             {
                 PlayerDataManager.Instance.IncrementButtonPressB();
@@ -51,7 +78,6 @@ public class GameLoop : MonoBehaviour
 
     private void SpawnPackagesForPerson(int personIndex)
     {
-
         placedPersons = _placeMe.GetPlacedPersons();
 
         if (personIndex < placedPersons.Count)
@@ -64,7 +90,5 @@ public class GameLoop : MonoBehaviour
         {
             Debug.LogWarning($"Person at index {personIndex} not found!");
         }
-
-
     }
 }
