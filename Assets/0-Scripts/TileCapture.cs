@@ -15,15 +15,15 @@ public class TileCapture : MonoBehaviour
     [SerializeField] private Material personAMaterial;
     [SerializeField] private Material personBMaterial;
     [SerializeField] private Material defaultMaterial;
-    [SerializeField] private Renderer tileRenderer;
+    [SerializeField] private Renderer[] tileRenderers;
 
     private void Start()
     {
-        // tileRenderer = GetComponentInChildren<Renderer>();
-        if (tileRenderer != null)
-        {
-            tileRenderer.material = defaultMaterial;
-        }
+        tileRenderers = GetComponentsInChildren<Renderer>(true);
+        // foreach (var renderer in tileRenderers)
+        // {
+        //     renderer.material = defaultMaterial;
+        // }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -103,20 +103,21 @@ public class TileCapture : MonoBehaviour
 
     private void UpdateTileMaterial()
     {
-        if (tileRenderer != null)
+        foreach (var renderer in tileRenderers)
         {
             switch (currentOwner)
             {
                 case Owner.PersonA:
-                    tileRenderer.material = personAMaterial;
+                    renderer.material = personAMaterial;
                     break;
                 case Owner.PersonB:
-                    tileRenderer.material = personBMaterial;
+                    renderer.material = personBMaterial;
                     break;
                 default:
-                    tileRenderer.material = defaultMaterial;
+                    renderer.material = defaultMaterial;
                     break;
             }
         }
     }
 }
+
