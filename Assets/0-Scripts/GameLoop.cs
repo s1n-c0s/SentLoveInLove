@@ -68,7 +68,7 @@ public class GameLoop : MonoBehaviour
     private void UpdateGameTime()
     {
         gameTime += Time.deltaTime;
-        Debug.Log(gameTime);
+        // Debug.Log(gameTime);
         if (gameTime >= gameTimeLimit)
         {
             EndGame();
