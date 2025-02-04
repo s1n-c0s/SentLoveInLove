@@ -375,11 +375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80187f32e8cf25c4f8468cca1b0fed85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameTimeLimit: 4
-  gridGenerator: {fileID: 2276510378960458318}
-  cameraController: {fileID: 8252041661399134946}
-  _placeMe: {fileID: 9058586213529513952}
-  dectectTarget: {fileID: 5612362373954428671}
+  gameTimeLimit: 35
+  placeMe: {fileID: 0}
+  detectTargets: {fileID: 0}
 --- !u!114 &8252041661399134946
 MonoBehaviour:
   m_ObjectHideFlags: 0

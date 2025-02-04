@@ -5,14 +5,15 @@ using Cinemachine;
 public class GameLoop : MonoBehaviour
 {
     [SerializeField] private float gameTimeLimit = 35f;
-    public GridGenerator gridGenerator;
-    public CameraController cameraController;
-    [SerializeField] private PlaceMe _placeMe;
-    [SerializeField] private DetectTargets dectectTarget;
+    [SerializeField] private PlaceMe placeMe;
+    [SerializeField] private DetectTargets detectTargets;
 
     private List<Person> placedPersons;
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
+
+    public GridGenerator GridGenerator { get; private set; }
+    public CameraController CameraController { get; private set; }
 
     private void Awake()
     {
@@ -22,40 +23,45 @@ public class GameLoop : MonoBehaviour
     private void Start()
     {
         gameTime = 0f;
-        dectectTarget.enabled = false;
+        detectTargets.enabled = false;
     }
 
     private void InitializeSceneReferences()
     {
-        gridGenerator = FindAnyObjectByType<GridGenerator>();
-        cameraController = GetComponent<CameraController>();
-        _placeMe = GetComponent<PlaceMe>();
-        dectectTarget = FindAnyObjectByType<DetectTargets>();
+        GridGenerator = FindAnyObjectByType<GridGenerator>();
+        CameraController = GetComponent<CameraController>();
+        placeMe = GetComponent<PlaceMe>();
+        detectTargets = FindAnyObjectByType<DetectTargets>();
     }
 
     public void StartGame()
     {
         GameManager.Instance.ChangeState(GameManager.GameState.Playing);
-        gridGenerator.GenerateGrid();
-        cameraController.FocusOnTargets();
-        _placeMe.CanPlace = true;
+        GridGenerator.GenerateGrid();
+        CameraController.FocusOnTargets();
+        placeMe.CanPlace = true;
     }
 
     private void Update()
     {
         if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
         {
-            if (_placeMe.PlacementComplete)
+            if (placeMe.PlacementComplete)
             {
-                billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
-                foreach (var billboardSprite in billboardSprites)
-                {
-                    billboardSprite.enabled = false;
-                }
+                DisableBillboardSprites();
                 UpdateGameTime();
-                dectectTarget.enabled = true;
+                detectTargets.enabled = true;
             }
             HandlePlacementInput();
+        }
+    }
+
+    private void DisableBillboardSprites()
+    {
+        billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
+        foreach (var billboardSprite in billboardSprites)
+        {
+            billboardSprite.enabled = false;
         }
     }
 
@@ -65,18 +71,28 @@ public class GameLoop : MonoBehaviour
         Debug.Log(gameTime);
         if (gameTime >= gameTimeLimit)
         {
-            GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
-            foreach (var billboardSprite in billboardSprites)
-            {
-                billboardSprite.enabled = true;
-            }
-            SwitchToEndCamera();
+            EndGame();
+        }
+    }
+
+    private void EndGame()
+    {
+        GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
+        EnableBillboardSprites();
+        SwitchToEndCamera();
+    }
+
+    private void EnableBillboardSprites()
+    {
+        foreach (var billboardSprite in billboardSprites)
+        {
+            billboardSprite.enabled = true;
         }
     }
 
     private void HandlePlacementInput()
     {
-        if (_placeMe.PlacementComplete)
+        if (placeMe.PlacementComplete)
         {
             if (Input.GetKeyDown(KeyCode.U))
             {
@@ -94,7 +110,7 @@ public class GameLoop : MonoBehaviour
 
     private void SpawnPackagesForPerson(int personIndex)
     {
-        placedPersons = _placeMe.GetPlacedPersons();
+        placedPersons = placeMe.GetPlacedPersons();
 
         if (personIndex < placedPersons.Count)
         {
@@ -110,11 +126,11 @@ public class GameLoop : MonoBehaviour
 
     public void SwitchToEndCamera()
     {
-        cameraController.SwitchToCamera(1); // Switch to endVirtualCamera
+        CameraController.SwitchToCamera(1); // Switch to endVirtualCamera
     }
 
     public void SwitchToMainCamera()
     {
-        cameraController.SwitchToCamera(0); // Switch to mainVirtualCamera
+        CameraController.SwitchToCamera(0); // Switch to mainVirtualCamera
     }
 }
