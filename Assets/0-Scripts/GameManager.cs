@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Entering Paused state");
                 break;
             case GameState.EndGame:
+                HandleEndState();
                 Debug.Log("Entering EndGame state");
                 break;
         }
@@ -89,6 +90,15 @@ public class GameManager : MonoBehaviour
         {
             _uiManager.HideAllPanels();
             _uiManager.ShowPanel("GameplayPanel");
+        }
+    }
+
+    private void HandleEndState()
+    {
+        if (_uiManager != null)
+        {
+            _uiManager.HideAllPanels();
+            _uiManager.ShowPanel("EndPanel");
         }
     }
 
