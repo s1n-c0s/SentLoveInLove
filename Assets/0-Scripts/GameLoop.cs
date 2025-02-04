@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class GameLoop : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class GameLoop : MonoBehaviour
     public GridGenerator gridGenerator;
     public CameraController cameraController;
     [SerializeField] private PlaceMe _placeMe;
+    [SerializeField] private DetectTargets dectectTarget;
 
     private List<Person> placedPersons;
     private float gameTime;
@@ -19,6 +21,7 @@ public class GameLoop : MonoBehaviour
     private void Start()
     {
         gameTime = 0f;
+        dectectTarget.enabled = false;
     }
 
     private void InitializeSceneReferences()
@@ -26,6 +29,7 @@ public class GameLoop : MonoBehaviour
         gridGenerator = FindAnyObjectByType<GridGenerator>();
         cameraController = GetComponent<CameraController>();
         _placeMe = GetComponent<PlaceMe>();
+        dectectTarget = FindAnyObjectByType<DetectTargets>();
     }
 
     public void StartGame()
@@ -43,6 +47,7 @@ public class GameLoop : MonoBehaviour
             if (_placeMe.PlacementComplete)
             {
                 UpdateGameTime();
+                dectectTarget.enabled = true;
             }
             HandlePlacementInput();
         }
@@ -55,6 +60,7 @@ public class GameLoop : MonoBehaviour
         if (gameTime >= gameTimeLimit)
         {
             GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
+            SwitchToEndCamera();
         }
     }
 
@@ -90,5 +96,15 @@ public class GameLoop : MonoBehaviour
         {
             Debug.LogWarning($"Person at index {personIndex} not found!");
         }
+    }
+
+    public void SwitchToEndCamera()
+    {
+        cameraController.SwitchToCamera(1); // Switch to endVirtualCamera
+    }
+
+    public void SwitchToMainCamera()
+    {
+        cameraController.SwitchToCamera(0); // Switch to mainVirtualCamera
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
@@ -7,7 +8,7 @@ public class CameraController : MonoBehaviour
     private GridGenerator gridGenerator; // Reference to the GridGenerator
 
     [SerializeField]
-    private CinemachineVirtualCamera virtualCamera; // Reference to the Cinemachine Virtual Camera
+    private List<CinemachineVirtualCamera> virtualCameras; // List of Cinemachine Virtual Cameras
 
     [SerializeField]
     private float zoomOutFactor = 1.2f; // Factor to zoom out the camera
@@ -22,11 +23,14 @@ public class CameraController : MonoBehaviour
 
     public void FocusOnTargets()
     {
-        if (gridGenerator == null || virtualCamera == null)
+        if (gridGenerator == null || virtualCameras == null || virtualCameras.Count == 0)
         {
-            Debug.LogError("GridGenerator or Virtual Camera is not assigned!");
+            Debug.LogError("GridGenerator or Virtual Cameras are not assigned!");
             return;
         }
+
+        // Use only the first camera in the list
+        CinemachineVirtualCamera virtualCamera = virtualCameras[0];
 
         // Calculate the bounds of all targets in the grid
         Bounds bounds = gridGenerator.CalculateGridBounds();
@@ -63,8 +67,20 @@ public class CameraController : MonoBehaviour
     private void InitializeSceneReferences()
     {
         gridGenerator = FindAnyObjectByType<GridGenerator>();
-        virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+        // virtualCameras = new List<CinemachineVirtualCamera>(FindObjectsOfType<CinemachineVirtualCamera>());
+    }
+
+    public void SwitchToCamera(int index)
+    {
+        if (index < 0 || index >= virtualCameras.Count)
+        {
+            Debug.LogError("Invalid camera index!");
+            return;
+        }
+
+        for (int i = 0; i < virtualCameras.Count; i++)
+        {
+            virtualCameras[i].Priority = (i == index) ? 1 : 0;
+        }
     }
 }
-
-
