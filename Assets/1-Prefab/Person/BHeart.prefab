@@ -18,6 +18,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: BHeart
       objectReference: {fileID: 0}
+    - target: {fileID: 4481464408178831540, guid: 2a62d049f01f23941afdba15449ca3c2,
+        type: 3}
+      propertyPath: UVModule.frameOverTime.scalar
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4481464408178831540, guid: 2a62d049f01f23941afdba15449ca3c2,
+        type: 3}
+      propertyPath: UVModule.frameOverTime.minScalar
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 6056481689339937313, guid: 2a62d049f01f23941afdba15449ca3c2,
         type: 3}
       propertyPath: m_LocalPosition.x
