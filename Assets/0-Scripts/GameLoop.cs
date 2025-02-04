@@ -11,6 +11,7 @@ public class GameLoop : MonoBehaviour
     [SerializeField] private DetectTargets dectectTarget;
 
     private List<Person> placedPersons;
+    private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
 
     private void Awake()
@@ -46,6 +47,11 @@ public class GameLoop : MonoBehaviour
         {
             if (_placeMe.PlacementComplete)
             {
+                billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
+                foreach (var billboardSprite in billboardSprites)
+                {
+                    billboardSprite.enabled = false;
+                }
                 UpdateGameTime();
                 dectectTarget.enabled = true;
             }
@@ -60,6 +66,10 @@ public class GameLoop : MonoBehaviour
         if (gameTime >= gameTimeLimit)
         {
             GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
+            foreach (var billboardSprite in billboardSprites)
+            {
+                billboardSprite.enabled = true;
+            }
             SwitchToEndCamera();
         }
     }
