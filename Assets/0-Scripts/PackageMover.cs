@@ -4,8 +4,8 @@ using Lean.Pool;
 
 public class PackageMover : MonoBehaviour
 {
-    [SerializeField] [Range(0f, 30f)] private float _minSpeed = 5f;
-    [SerializeField] [Range(0f, 30f)] private float _maxSpeed = 30f;
+    [SerializeField][Range(0f, 30f)] private float _minSpeed = 5f;
+    [SerializeField][Range(0f, 30f)] private float _maxSpeed = 30f;
     [SerializeField] public GameObject targetPerson;
     [SerializeField] private TrailRenderer _trail; // Use TrailRenderer for the tail
 
@@ -78,8 +78,16 @@ public class PackageMover : MonoBehaviour
 
             if (_currentNodeIndex >= _path.Count)
             {
-                Debug.Log($"Package reached its destination: {targetPerson.name}");
+                //Debug.Log($"Package reached its destination: {targetPerson.name}");
                 LeanPool.Despawn(gameObject);
+                if (targetPerson.CompareTag("PersonA"))
+                {
+                    PlayerDataManager.Instance.IncrementPackageReceivedB();
+                }
+                else
+                {
+                    PlayerDataManager.Instance.IncrementPackageReceivedA();
+                }
                 ResetTrail(); // Reset trail upon reaching destination
             }
         }
