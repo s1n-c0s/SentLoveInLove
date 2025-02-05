@@ -2187,6 +2187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7785579709337914287}
   - component: {fileID: 2917775868641865227}
+  - component: {fileID: 8655586351968578772}
   m_Layer: 5
   m_Name: Layout
   m_TagString: Untagged
@@ -2241,6 +2242,31 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
+--- !u!114 &8655586351968578772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5378927324947658708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be062ba24e21d1d4fa0a56e72fecfdec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPersonA: 1
+  characterComponents:
+  - characterSprite: {fileID: 0}
+    iconSprite: {fileID: 0}
+    boxSprite: {fileID: 21300000, guid: 8cfef431e5a88224eb947c11941fe731, type: 3}
+    flipX: 0
+  - characterSprite: {fileID: 0}
+    iconSprite: {fileID: 0}
+    boxSprite: {fileID: 21300000, guid: a5f9bc3b5a9b84343985bbd09c007731, type: 3}
+    flipX: 0
+  characterImage: {fileID: 0}
+  iconImage: {fileID: 0}
+  boxImage: {fileID: 1680383072176486196}
 --- !u!1 &5595983734515782424
 GameObject:
   m_ObjectHideFlags: 0
@@ -3062,6 +3088,7 @@ GameObject:
   m_Component:
   - component: {fileID: 296284113295345701}
   - component: {fileID: 8157240840379075370}
+  - component: {fileID: 8206090203773492907}
   m_Layer: 5
   m_Name: Layout
   m_TagString: Untagged
@@ -3116,6 +3143,31 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
+--- !u!114 &8206090203773492907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7425153235117749004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be062ba24e21d1d4fa0a56e72fecfdec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPersonA: 0
+  characterComponents:
+  - characterSprite: {fileID: 0}
+    iconSprite: {fileID: 0}
+    boxSprite: {fileID: 21300000, guid: a5f9bc3b5a9b84343985bbd09c007731, type: 3}
+    flipX: 0
+  - characterSprite: {fileID: 0}
+    iconSprite: {fileID: 0}
+    boxSprite: {fileID: 21300000, guid: 8cfef431e5a88224eb947c11941fe731, type: 3}
+    flipX: 0
+  characterImage: {fileID: 0}
+  iconImage: {fileID: 0}
+  boxImage: {fileID: 7949652068772469571}
 --- !u!1 &7600147493366253526
 GameObject:
   m_ObjectHideFlags: 0
