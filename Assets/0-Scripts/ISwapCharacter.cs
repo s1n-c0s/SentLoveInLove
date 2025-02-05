@@ -32,19 +32,19 @@ public class ISwapCharacter : MonoBehaviour
 
     private void Start()
     {
+        if (isPersonA)
+        {
+            characterIndex = PlayerDataManager.Instance.playerData.SelectCharacterA;
+        }
+        else
+        {
+            characterIndex = PlayerDataManager.Instance.playerData.SelectCharacterB;
+        }
+
         if (characterComponents.Length > 0)
         {
             SetSprites(characterComponents[characterIndex]);
         }
-
-        // if (gameObject.CompareTag("PersonA"))
-        // {
-        //     isPersonA = true;
-        // }
-        // else if (gameObject.CompareTag("PersonB"))
-        // {
-        //     isPersonA = false;
-        // }
     }
 
     public void ToggleCharacter()
@@ -63,17 +63,26 @@ public class ISwapCharacter : MonoBehaviour
 
     private void SetSprites(CharacterComponent component)
     {
-        characterImage.sprite = component.characterSprite;
-        iconImage.sprite = component.iconSprite;
-        boxImage.sprite = component.boxSprite;
+        if (component.characterSprite != null)
+        {
+            characterImage.sprite = component.characterSprite;
 
-        float randomRotation = Random.Range(-5f, 5f);
-        characterImage.transform.rotation = Quaternion.Euler(0, 0, randomRotation);
+            float randomRotation = Random.Range(-5f, 5f);
+            characterImage.transform.rotation = Quaternion.Euler(0, 0, randomRotation);
+            ApplyFlipSettings(characterImage.rectTransform, component.flipX);
+        }
 
-        boxImage.transform.rotation = Quaternion.identity;
+        if (component.iconSprite != null)
+        {
+            iconImage.sprite = component.iconSprite;
+            ApplyFlipSettings(iconImage.rectTransform, component.flipX);
+        }
 
-        ApplyFlipSettings(characterImage.rectTransform, component.flipX);
-        ApplyFlipSettings(iconImage.rectTransform, component.flipX);
+        if (component.boxSprite != null && boxImage != null)
+        {
+            boxImage.sprite = component.boxSprite;
+            boxImage.transform.rotation = Quaternion.identity;
+        }
     }
 
     private void ApplyFlipSettings(RectTransform rectTransform, bool flipX)
