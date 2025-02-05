@@ -575,7 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be062ba24e21d1d4fa0a56e72fecfdec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPersonA: 1
+  isPersonA: 0
   characterComponents:
   - characterSprite: {fileID: 0}
     iconSprite: {fileID: 0}
