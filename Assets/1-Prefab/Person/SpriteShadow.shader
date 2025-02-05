@@ -4,6 +4,7 @@ Shader "Custom/SpriteShadow"
     {
         _MainTex("Sprite Texture", 2D) = "white" {}
         _Color("Color Tint", Color) = (1, 1, 1, 1)
+        _FlipX("Flip X", Float) = 0
     }
 
     SubShader
@@ -31,6 +32,7 @@ Shader "Custom/SpriteShadow"
             // Properties
             sampler2D _MainTex;
             float4 _Color;
+            float _FlipX;
 
             // Vertex structure for sprite
             struct Attributes
@@ -49,7 +51,12 @@ Shader "Custom/SpriteShadow"
             Varyings vert(Attributes v)
             {
                 Varyings o;
-                o.positionCS = TransformObjectToHClip(float4(v.positionOS.xyz, 1.0)); // Transform to clip space
+                float4 pos = v.positionOS;
+                if (_FlipX > 0.5)
+                {
+                    pos.x = -pos.x;
+                }
+                o.positionCS = TransformObjectToHClip(float4(pos.xyz, 1.0)); // Transform to clip space
                 o.texCoord = v.texCoord; // Directly pass the texture coordinates
                 return o;
             }
@@ -73,12 +80,15 @@ Shader "Custom/SpriteShadow"
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite On
             ZTest LEqual
-            Cull Front // Cull front faces for correct shadow rendering
+            Cull Off // Cull off to ensure both sides are rendered for shadows
 
             HLSLPROGRAM
             #pragma vertex vertShadow
             #pragma fragment fragShadow
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            // Properties
+            float _FlipX;
 
             // Attributes and varying structure for shadow pass
             struct Attributes
@@ -95,8 +105,12 @@ Shader "Custom/SpriteShadow"
             Varyings vertShadow(Attributes v)
             {
                 Varyings o;
-                // Use float4 for homogeneous coordinates (w = 1.0)
-                o.positionCS = TransformObjectToHClip(float4(v.positionOS.xyz, 1.0)); // Fix truncation issue
+                float4 pos = v.positionOS;
+                if (_FlipX > 0.5)
+                {
+                    pos.x = -pos.x;
+                }
+                o.positionCS = TransformObjectToHClip(float4(pos.xyz, 1.0)); // Transform to clip space
                 return o;
             }
 

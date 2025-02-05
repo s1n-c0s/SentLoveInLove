@@ -1,69 +1,136 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class GameLoop : MonoBehaviour
 {
-    public GridGenerator gridGenerator;
-    public CameraController cameraController;
+    [SerializeField] private float gameTimeLimit = 35f;
+    [SerializeField] private PlaceMe placeMe;
+    [SerializeField] private DetectTargets detectTargets;
 
-    [SerializeField] private PlaceMe _placeMe;
     private List<Person> placedPersons;
+    private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
+    private float gameTime;
 
-    private void InitializeSceneReferences()
+    public GridGenerator GridGenerator { get; private set; }
+    public CameraController CameraController { get; private set; }
+
+    private void Awake()
     {
-        gridGenerator = FindAnyObjectByType<GridGenerator>();
-        cameraController = GetComponent<CameraController>();
-        _placeMe = GetComponent<PlaceMe>();
+        InitializeSceneReferences();
     }
 
     private void Start()
     {
-        InitializeSceneReferences();
+        gameTime = 0f;
+        detectTargets.enabled = false;
+    }
+
+    private void InitializeSceneReferences()
+    {
+        GridGenerator = FindAnyObjectByType<GridGenerator>();
+        CameraController = GetComponent<CameraController>();
+        placeMe = GetComponent<PlaceMe>();
+        detectTargets = FindAnyObjectByType<DetectTargets>();
     }
 
     public void StartGame()
     {
         GameManager.Instance.ChangeState(GameManager.GameState.Playing);
-        gridGenerator.GenerateGrid();
-        cameraController.FocusOnTargets();
-        _placeMe.CanPlace = true;
+        GridGenerator.GenerateGrid();
+        CameraController.FocusOnTargets();
+        placeMe.CanPlace = true;
     }
 
     private void Update()
     {
-        // Random package spawning for Person A when "I" is pressed
-        if (Input.GetKeyDown(KeyCode.I))
+        if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
         {
-            SpawnPackagesForPerson(0); // First person (Person A)
+            if (placeMe.PlacementComplete)
+            {
+                DisableBillboardSprites();
+                UpdateGameTime();
+                detectTargets.enabled = true;
+            }
+            HandlePlacementInput();
         }
+    }
 
-        // Random package spawning for Person B when "U" is pressed
-        if (Input.GetKeyDown(KeyCode.U))
+    private void DisableBillboardSprites()
+    {
+        billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
+        foreach (var billboardSprite in billboardSprites)
         {
-            SpawnPackagesForPerson(1); // Second person (Person B)
+            billboardSprite.enabled = false;
+        }
+    }
+
+    private void UpdateGameTime()
+    {
+        gameTime += Time.deltaTime;
+        // Debug.Log(gameTime);
+        if (gameTime >= gameTimeLimit)
+        {
+            EndGame();
+        }
+    }
+
+    private void EndGame()
+    {
+        GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
+        EnableBillboardSprites();
+        SwitchToEndCamera();
+    }
+
+    private void EnableBillboardSprites()
+    {
+        foreach (var billboardSprite in billboardSprites)
+        {
+            billboardSprite.enabled = true;
+        }
+    }
+
+    private void HandlePlacementInput()
+    {
+        if (placeMe.PlacementComplete)
+        {
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                PlayerDataManager.Instance.IncrementButtonPressA();
+                SpawnPackagesForPerson(0); // First person (Person A)
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                PlayerDataManager.Instance.IncrementButtonPressB();
+                SpawnPackagesForPerson(1); // Second person (Person B)
+            }
         }
     }
 
     private void SpawnPackagesForPerson(int personIndex)
     {
-        if (_placeMe.PlacementComplete)
-        {
-            placedPersons = _placeMe.GetPlacedPersons();
+        placedPersons = placeMe.GetPlacedPersons();
 
-            if (personIndex < placedPersons.Count)
-            {
-                Person person = placedPersons[personIndex];
-                Debug.Log($"Spawning packages around {person.name}...");
-                person.SpawnPackageAroundSelf();
-            }
-            else
-            {
-                Debug.LogWarning($"Person at index {personIndex} not found!");
-            }
+        if (personIndex < placedPersons.Count)
+        {
+            Person person = placedPersons[personIndex];
+            Debug.Log($"Spawning packages around {person.name}...");
+            person.SpawnPackageAroundSelf();
         }
         else
         {
-            Debug.LogWarning("Placement phase is not complete. Cannot spawn packages.");
+            Debug.LogWarning($"Person at index {personIndex} not found!");
         }
+    }
+
+    public void SwitchToEndCamera()
+    {
+        CameraController.SwitchToCamera(1); // Switch to endVirtualCamera
+    }
+
+    public void SwitchToMainCamera()
+    {
+        CameraController.SwitchToCamera(0); // Switch to mainVirtualCamera
     }
 }

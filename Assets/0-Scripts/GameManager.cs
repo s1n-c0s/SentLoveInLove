@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     }
 
     private GameState currentState;
+    private GameState previousState;
+    private string previousPanel;
 
     public delegate void OnGameStateChanged(GameState newState);
     public static event OnGameStateChanged GameStateChanged;
@@ -26,36 +28,31 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
-            return; // Prevent further execution in this instance
+            return;
         }
 
-        // Initialize references for the first scene
         InitializeSceneReferences();
     }
 
     private void Start()
     {
-        // Subscribe to sceneLoaded event to reinitialize references after a scene loads
         SceneManager.sceneLoaded += OnSceneLoaded;
-
-        // Set the initial game state
-        ChangeState(GameState.MainMenu);
+        // ChangeState(GameState.MainMenu);
     }
 
     private void OnDestroy()
     {
-        // Unsubscribe from the event to avoid memory leaks
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        // ChangeState(GameState.MainMenu);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reinitialize references whenever a new scene is loaded
         InitializeSceneReferences();
     }
 
@@ -63,6 +60,14 @@ public class GameManager : MonoBehaviour
     {
         _gameLoop = FindObjectOfType<GameLoop>();
         _uiManager = FindObjectOfType<UIManager>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
     }
 
     public void ChangeState(GameState newState)
@@ -82,6 +87,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Entering Paused state");
                 break;
             case GameState.EndGame:
+                HandleEndState();
                 Debug.Log("Entering EndGame state");
                 break;
         }
@@ -94,19 +100,39 @@ public class GameManager : MonoBehaviour
         if (_uiManager != null)
         {
             _uiManager.HideAllPanels();
+            _uiManager.ShowPanel("GameplayPanel");
         }
-        _uiManager.ShowPanel("GameplayPanel");
+    }
+
+    private void HandleEndState()
+    {
+        if (_uiManager != null)
+        {
+            _uiManager.HideAllPanels();
+            _uiManager.ShowPanel("EndPanel");
+        }
     }
 
     public void TogglePause()
     {
-        if (currentState == GameState.Playing)
+        if (currentState == GameState.Playing || currentState == GameState.EndGame)
         {
+            previousState = currentState;
+            previousPanel = _uiManager.GetCurrentPanel(); // Assuming UIManager has a method to get the current panel
             ChangeState(GameState.Paused);
+            if (_uiManager != null)
+            {
+                _uiManager.ShowPanel("PausePanel");
+            }
         }
         else if (currentState == GameState.Paused)
         {
-            ChangeState(GameState.Playing);
+            ChangeState(previousState);
+            if (_uiManager != null)
+            {
+                _uiManager.HideAllPanels();
+                _uiManager.ShowPanel(previousPanel);
+            }
         }
     }
 

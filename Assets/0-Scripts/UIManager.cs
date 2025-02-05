@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,5 +25,17 @@ public class UIManager : MonoBehaviour
         {
             panel.SetActive(false);
         }
+    }
+
+    public string GetCurrentPanel()
+    {
+        foreach (GameObject panel in Panels)
+        {
+            if (panel.activeSelf)
+            {
+                return panel.name;
+            }
+        }
+        return null;
     }
 }

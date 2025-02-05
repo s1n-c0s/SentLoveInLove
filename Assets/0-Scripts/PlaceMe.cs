@@ -26,7 +26,11 @@ public class PlaceMe : MonoBehaviour
 
     private void SelectLocation()
     {
-        if (PlacementComplete) return;
+        if (PlacementComplete)
+        {
+            CanPlace = false;
+            return;
+        }
 
         if (!Input.GetMouseButtonDown(0)) return;
 

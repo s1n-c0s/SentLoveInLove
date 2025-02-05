@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 337968250128462691}
+  - component: {fileID: 972983236790911930}
   - component: {fileID: 427619776915663761}
   - component: {fileID: 3725747528933349130}
   - component: {fileID: 3782136805208632122}
@@ -159,6 +160,23 @@ Transform:
   - {fileID: 2130394731173605335}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &972983236790911930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3600933413957533853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8588cb8acab569943ac1bc13ffd9a740, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentOwner: 0
+  personAMaterial: {fileID: 2100000, guid: a6a9daffd97df7545b640ad5f896c383, type: 2}
+  personBMaterial: {fileID: 2100000, guid: ebd0c11aa46d537438006b93d95858f6, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 7f0945d276e7ac449965fe5d2eb7bd1e, type: 2}
+  tileRenderers: []
 --- !u!65 &427619776915663761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -174,7 +192,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -213,7 +231,7 @@ MonoBehaviour:
     probability: 9.1
   obstacleVisuals:
   - visual: {fileID: 405107448763571967}
-    probability: 27.2
+    probability: 43.3
   - visual: {fileID: 7270083177640931173}
     probability: 17.2
   - visual: {fileID: 3415091655283625337}

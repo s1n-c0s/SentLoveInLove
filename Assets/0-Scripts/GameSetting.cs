@@ -23,5 +23,10 @@ public class GameSetting : MonoBehaviour
         // Reload the current active scene
         SceneManager.LoadScene(currentSceneIndex);
     }
+
+    public void ExitApp()
+    {
+        Application.Quit();
+    }
 }
 
