@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     }
 
     private GameState currentState;
+    private GameState previousState;
+    private string previousPanel;
 
     public delegate void OnGameStateChanged(GameState newState);
     public static event OnGameStateChanged GameStateChanged;
@@ -26,7 +28,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -40,12 +42,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        ChangeState(GameState.MainMenu);
+        // ChangeState(GameState.MainMenu);
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        // ChangeState(GameState.MainMenu);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -57,6 +60,14 @@ public class GameManager : MonoBehaviour
     {
         _gameLoop = FindObjectOfType<GameLoop>();
         _uiManager = FindObjectOfType<UIManager>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
     }
 
     public void ChangeState(GameState newState)
@@ -104,13 +115,24 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
-        if (currentState == GameState.Playing)
+        if (currentState == GameState.Playing || currentState == GameState.EndGame)
         {
+            previousState = currentState;
+            previousPanel = _uiManager.GetCurrentPanel(); // Assuming UIManager has a method to get the current panel
             ChangeState(GameState.Paused);
+            if (_uiManager != null)
+            {
+                _uiManager.ShowPanel("PausePanel");
+            }
         }
         else if (currentState == GameState.Paused)
         {
-            ChangeState(GameState.Playing);
+            ChangeState(previousState);
+            if (_uiManager != null)
+            {
+                _uiManager.HideAllPanels();
+                _uiManager.ShowPanel(previousPanel);
+            }
         }
     }
 
