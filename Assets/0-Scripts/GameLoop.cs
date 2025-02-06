@@ -7,6 +7,7 @@ public class GameLoop : MonoBehaviour
     [SerializeField] private float gameTimeLimit = 35f;
     [SerializeField] private PlaceMe placeMe;
     [SerializeField] private DetectTargets detectTargets;
+    [SerializeField] private IHowToPlay howToPlay;
 
     private List<Person> placedPersons;
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
@@ -26,22 +27,6 @@ public class GameLoop : MonoBehaviour
         detectTargets.enabled = false;
     }
 
-    private void InitializeSceneReferences()
-    {
-        GridGenerator = FindAnyObjectByType<GridGenerator>();
-        CameraController = GetComponent<CameraController>();
-        placeMe = GetComponent<PlaceMe>();
-        detectTargets = FindAnyObjectByType<DetectTargets>();
-    }
-
-    public void StartGame()
-    {
-        GameManager.Instance.ChangeState(GameManager.GameState.Playing);
-        GridGenerator.GenerateGrid();
-        CameraController.FocusOnTargets();
-        placeMe.CanPlace = true;
-    }
-
     private void Update()
     {
         if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
@@ -49,12 +34,47 @@ public class GameLoop : MonoBehaviour
             if (placeMe.PlacementComplete)
             {
                 DisableBillboardSprites();
-                UpdateGameTime();
-                detectTargets.enabled = true;
+                SetGame();
             }
             HandlePlacementInput();
         }
     }
+
+    private void InitializeSceneReferences()
+    {
+        GridGenerator = FindObjectOfType<GridGenerator>(); // Fixed FindAnyObjectByType to FindObjectOfType
+        CameraController = GetComponent<CameraController>();
+        placeMe = GetComponent<PlaceMe>();
+        detectTargets = FindObjectOfType<DetectTargets>(); // Fixed FindAnyObjectByType to FindObjectOfType
+    }
+
+    public void StartGame()
+    {
+        GameManager.Instance.ChangeState(GameManager.GameState.Playing);
+        GridGenerator.GenerateGrid();
+        CameraController.FocusOnTargets();
+
+        howToPlay = FindObjectOfType<IHowToPlay>(); // Fixed FindAnyObjectByType to FindObjectOfType
+        howToPlay.ShowHowToPlayPanels();
+        placeMe.CanPlace = true;
+    }
+
+    public void SetGame()
+    {
+        detectTargets.enabled = true;
+        placeMe.CanPlace = false;
+        howToPlay.HideAllPanels();
+
+        if (howToPlay != null)
+        {
+            StartCoroutine(howToPlay.ShowReadyToPlay());
+        }
+        else
+        {
+            UpdateGameTime();
+        }
+    }
+
 
     private void DisableBillboardSprites()
     {
@@ -68,7 +88,6 @@ public class GameLoop : MonoBehaviour
     private void UpdateGameTime()
     {
         gameTime += Time.deltaTime;
-        // Debug.Log(gameTime);
         if (gameTime >= gameTimeLimit)
         {
             EndGame();
