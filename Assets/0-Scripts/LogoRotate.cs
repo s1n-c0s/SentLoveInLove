@@ -3,7 +3,7 @@ using UnityEngine;
 public class LogoRotate : MonoBehaviour
 {
     public RectTransform imageTransform;
-    public float rotationSpeed = 20f;
+    public float rotationSpeed = 15f;
 
     private Quaternion targetRotation;
 
