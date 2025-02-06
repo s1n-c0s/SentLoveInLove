@@ -33,8 +33,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 226.96}
+  m_AnchoredPosition: {x: 9.999943, y: 40}
+  m_SizeDelta: {x: -20.000113, y: 226.96}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &784995287262185918
 GameObject:
@@ -245,8 +245,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1128978842119766410}
+  - component: {fileID: 2228250031957244040}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: IF-Logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -273,6 +274,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 816.199, y: 1079.7681}
   m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &2228250031957244040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954604294557038399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7afc543db8800c545b40b4316e422e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageTransform: {fileID: 3510647919098427512}
+  rotationSpeed: 20
 --- !u!1 &2039439800010500938
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,7 +407,7 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3037017741467535083}
-  m_CullTransparentMesh: 1
+  m_CullTransparentMesh: 0
 --- !u!114 &199306848135425053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -771,8 +786,9 @@ MonoBehaviour:
 
     Developed by Thanakrit Ph.'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
+  m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -918,7 +934,7 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6048905699191913147}
-  m_CullTransparentMesh: 1
+  m_CullTransparentMesh: 0
 --- !u!114 &2270251347264994336
 MonoBehaviour:
   m_ObjectHideFlags: 0
