@@ -1053,7 +1053,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: d6d7ef17b43cbf6438fbad4908adbcd1, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -1082,8 +1082,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Name\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d6d7ef17b43cbf6438fbad4908adbcd1, type: 2}
-  m_sharedMaterial: {fileID: -3656249772759049342, guid: d6d7ef17b43cbf6438fbad4908adbcd1,
+  m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
+  m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1108,7 +1108,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.75
+  m_fontSize: 39.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1754,7 +1754,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: d6d7ef17b43cbf6438fbad4908adbcd1, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -1783,8 +1783,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Name\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d6d7ef17b43cbf6438fbad4908adbcd1, type: 2}
-  m_sharedMaterial: {fileID: -3656249772759049342, guid: d6d7ef17b43cbf6438fbad4908adbcd1,
+  m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
+  m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1809,7 +1809,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.75
+  m_fontSize: 39.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

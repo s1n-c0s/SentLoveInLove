@@ -1,49 +1,41 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class INameData : MonoBehaviour
 {
     private const string P1NameKey = "P1Name";
     private const string P2NameKey = "P2Name";
-    private const int MaxNameLength = 12; // Maximum number of characters allowed for a name
+    private const int MaxNameLength = 12;
+    private const string DefaultP1Name = "Player 1";
+    private const string DefaultP2Name = "Player 2";
 
-    // Saves the player's name based on the player index (1 or 2)
     public static void SavePlayerName(int playerIndex, string playerName)
     {
-        if (playerName.Length > MaxNameLength)
-        {
-            playerName = playerName.Substring(0, MaxNameLength);
-            Debug.LogWarning($"Player {playerIndex}'s name was too long and has been truncated to: {playerName}");
-        }
+        playerName = playerName.Length > MaxNameLength ? playerName.Substring(0, MaxNameLength) : playerName;
 
-        if (playerIndex == 1)
-        {
-            PlayerPrefs.SetString(P1NameKey, playerName);
-        }
-        else if (playerIndex == 2)
-        {
-            PlayerPrefs.SetString(P2NameKey, playerName);
-        }
+        string key = playerIndex == 1 ? P1NameKey : P2NameKey;
+        PlayerPrefs.SetString(key, playerName);
         PlayerPrefs.Save();
     }
 
-    // Loads the player's name based on the player index (1 or 2)
     public static string LoadPlayerName(int playerIndex)
     {
-        if (playerIndex == 1)
-        {
-            return PlayerPrefs.GetString(P1NameKey, "");
-        }
-        else if (playerIndex == 2)
-        {
-            return PlayerPrefs.GetString(P2NameKey, "");
-        }
-        return "";
+        string key = playerIndex == 1 ? P1NameKey : P2NameKey;
+        string defaultName = playerIndex == 1 ? DefaultP1Name : DefaultP2Name;
+        string playerName = PlayerPrefs.GetString(key, defaultName); // Return default if no saved name
+        // ClearPlayerName(key); // Clear the name upon reloading
+        return playerName;
     }
 
-    // Sets the character limit for the InputField
-    public static void SetInputFieldCharacterLimit(InputField inputField)
+    private void OnDestroy()
     {
-        inputField.characterLimit = MaxNameLength;
+        ClearPlayerName(P1NameKey);
+        ClearPlayerName(P2NameKey);
+    }
+
+    private static void ClearPlayerName(string key)
+    {
+        PlayerPrefs.DeleteKey(key);
+        PlayerPrefs.Save();
     }
 }
+
