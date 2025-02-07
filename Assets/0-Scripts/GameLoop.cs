@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using PrimeTween;
+using System.Collections;
 
 public class GameLoop : MonoBehaviour
 {
     [SerializeField] private float gameTimeLimit = 35f;
     [SerializeField] private PlaceMe placeMe;
     [SerializeField] private DetectTargets detectTargets;
-    [SerializeField] private IHowToPlay howToPlay;
+    [SerializeField] private IHowToPlay howToPlay; // Renamed from IHowToPlay
 
-    private List<Person> placedPersons;
+    private List<Person> placedPersons = new List<Person>();
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
+    private bool isGameRunning = false; // Added flag to track game time
 
     public GridGenerator GridGenerator { get; private set; }
     public CameraController CameraController { get; private set; }
@@ -37,15 +40,24 @@ public class GameLoop : MonoBehaviour
                 SetGame();
             }
             HandlePlacementInput();
+
+            if (isGameRunning)
+            {
+                gameTime += Time.deltaTime;
+                if (gameTime >= gameTimeLimit)
+                {
+                    EndGame();
+                }
+            }
         }
     }
 
     private void InitializeSceneReferences()
     {
-        GridGenerator = FindObjectOfType<GridGenerator>(); // Fixed FindAnyObjectByType to FindObjectOfType
+        GridGenerator = FindObjectOfType<GridGenerator>();
         CameraController = GetComponent<CameraController>();
         placeMe = GetComponent<PlaceMe>();
-        detectTargets = FindObjectOfType<DetectTargets>(); // Fixed FindAnyObjectByType to FindObjectOfType
+        detectTargets = FindObjectOfType<DetectTargets>();
     }
 
     public void StartGame()
@@ -54,27 +66,20 @@ public class GameLoop : MonoBehaviour
         GridGenerator.GenerateGrid();
         CameraController.FocusOnTargets();
 
-        howToPlay = FindObjectOfType<IHowToPlay>(); // Fixed FindAnyObjectByType to FindObjectOfType
+        howToPlay = FindObjectOfType<IHowToPlay>(); // Renamed from IHowToPlay
         howToPlay.ShowHowToPlayPanels();
         placeMe.CanPlace = true;
     }
 
     public void SetGame()
     {
-        detectTargets.enabled = true;
         placeMe.CanPlace = false;
         howToPlay.HideAllPanels();
 
-        if (howToPlay != null)
-        {
-            StartCoroutine(howToPlay.ShowReadyToPlay());
-        }
-        else
-        {
-            UpdateGameTime();
-        }
+        howToPlay.ShowReadyToPlay();
+        detectTargets.enabled = true;
+        StartCoroutine(UpdateGameTime());
     }
-
 
     private void DisableBillboardSprites()
     {
@@ -85,17 +90,19 @@ public class GameLoop : MonoBehaviour
         }
     }
 
-    private void UpdateGameTime()
+    private IEnumerator UpdateGameTime()
     {
-        gameTime += Time.deltaTime;
-        if (gameTime >= gameTimeLimit)
+        isGameRunning = true;
+        while (gameTime < gameTimeLimit)
         {
-            EndGame();
+            yield return null;
         }
+        EndGame();
     }
 
     private void EndGame()
     {
+        isGameRunning = false;
         GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
         EnableBillboardSprites();
         SwitchToEndCamera();
@@ -113,6 +120,8 @@ public class GameLoop : MonoBehaviour
     {
         if (placeMe.PlacementComplete)
         {
+            if (placedPersons == null) return; // Prevents null errors
+
             if (Input.GetKeyDown(KeyCode.U))
             {
                 PlayerDataManager.Instance.IncrementButtonPressA();
@@ -130,7 +139,6 @@ public class GameLoop : MonoBehaviour
     private void SpawnPackagesForPerson(int personIndex)
     {
         placedPersons = placeMe.GetPlacedPersons();
-
         if (personIndex < placedPersons.Count)
         {
             Person person = placedPersons[personIndex];
