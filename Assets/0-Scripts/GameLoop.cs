@@ -9,12 +9,12 @@ public class GameLoop : MonoBehaviour
     [SerializeField] private float gameTimeLimit = 35f;
     [SerializeField] private PlaceMe placeMe;
     [SerializeField] private DetectTargets detectTargets;
-    [SerializeField] private IHowToPlay howToPlay; // Renamed from IHowToPlay
+    [SerializeField] private IHowToPlay howToPlay; 
 
     private List<Person> placedPersons = new List<Person>();
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
-    private bool isGameRunning = false; // Added flag to track game time
+    private bool isGameRunning;
 
     public GridGenerator GridGenerator { get; private set; }
     public CameraController CameraController { get; private set; }
@@ -32,22 +32,25 @@ public class GameLoop : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
+        if (GameManager.Instance.GetCurrentState() != GameManager.GameState.Playing) return;
+
+        if (placeMe.PlacementComplete)
         {
-            if (placeMe.PlacementComplete)
+            if (!isGameRunning)
             {
                 DisableBillboardSprites();
                 SetGame();
             }
-            HandlePlacementInput();
+        }
 
-            if (isGameRunning)
+        HandlePlacementInput();
+
+        if (isGameRunning)
+        {
+            gameTime += Time.deltaTime;
+            if (gameTime >= gameTimeLimit)
             {
-                gameTime += Time.deltaTime;
-                if (gameTime >= gameTimeLimit)
-                {
-                    EndGame();
-                }
+                EndGame();
             }
         }
     }
@@ -66,24 +69,27 @@ public class GameLoop : MonoBehaviour
         GridGenerator.GenerateGrid();
         CameraController.FocusOnTargets();
 
-        howToPlay = FindObjectOfType<IHowToPlay>(); // Renamed from IHowToPlay
+        howToPlay = FindObjectOfType<IHowToPlay>();
         howToPlay.ShowHowToPlayPanels();
         placeMe.CanPlace = true;
     }
 
-    public void SetGame()
+    private void SetGame()
     {
         placeMe.CanPlace = false;
         howToPlay.HideAllPanels();
-
         howToPlay.ShowReadyToPlay();
         detectTargets.enabled = true;
+
         StartCoroutine(UpdateGameTime());
     }
 
     private void DisableBillboardSprites()
     {
-        billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
+        // Cache all billboard sprites once to improve performance
+        if (billboardSprites.Count == 0)
+            billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
+
         foreach (var billboardSprite in billboardSprites)
         {
             billboardSprite.enabled = false;
@@ -97,7 +103,11 @@ public class GameLoop : MonoBehaviour
         {
             yield return null;
         }
-        EndGame();
+
+        if (isGameRunning)
+        {
+            EndGame();
+        }
     }
 
     private void EndGame()
@@ -118,37 +128,33 @@ public class GameLoop : MonoBehaviour
 
     private void HandlePlacementInput()
     {
-        if (placeMe.PlacementComplete)
+        if (!placeMe.PlacementComplete || placedPersons == null) return;
+
+        if (Input.GetKeyDown(KeyCode.U))
         {
-            if (placedPersons == null) return; // Prevents null errors
+            PlayerDataManager.Instance.IncrementButtonPressA();
+            SpawnPackagesForPerson(0); // First person (Person A)
+        }
 
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                PlayerDataManager.Instance.IncrementButtonPressA();
-                SpawnPackagesForPerson(0); // First person (Person A)
-            }
-
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                PlayerDataManager.Instance.IncrementButtonPressB();
-                SpawnPackagesForPerson(1); // Second person (Person B)
-            }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            PlayerDataManager.Instance.IncrementButtonPressB();
+            SpawnPackagesForPerson(1); // Second person (Person B)
         }
     }
 
     private void SpawnPackagesForPerson(int personIndex)
     {
         placedPersons = placeMe.GetPlacedPersons();
-        if (personIndex < placedPersons.Count)
-        {
-            Person person = placedPersons[personIndex];
-            Debug.Log($"Spawning packages around {person.name}...");
-            person.SpawnPackageAroundSelf();
-        }
-        else
+        if (personIndex >= placedPersons.Count)
         {
             Debug.LogWarning($"Person at index {personIndex} not found!");
+            return;
         }
+
+        Person person = placedPersons[personIndex];
+        Debug.Log($"Spawning packages around {person.name}...");
+        person.SpawnPackageAroundSelf();
     }
 
     public void SwitchToEndCamera()
