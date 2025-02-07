@@ -5,10 +5,10 @@ using TMPro;
 
 public class ITimeDisplay : MonoBehaviour
 {
-    [SerializeField] GameLoop gameLoop;
-    [SerializeField] TextMeshProUGUI timeDisplay;
+    [SerializeField] private GameLoop gameLoop;
+    [SerializeField] private TextMeshProUGUI timeDisplay;
 
-    void Start()
+    private void Start()
     {
         timeDisplay = GetComponent<TextMeshProUGUI>();
         gameLoop = FindObjectOfType<GameLoop>();
@@ -16,6 +16,14 @@ public class ITimeDisplay : MonoBehaviour
 
     private void LateUpdate()
     {
-        // timeDisplay.text = ((int)gameLoop.GameTimeLimit).ToString("00");
+        // Calculate the remaining time
+        float remainingTime = gameLoop.GameTimeLimitSeconds - gameLoop.GameTime;
+
+        // Format the remaining time as seconds
+        int seconds = Mathf.FloorToInt(remainingTime);
+
+        // Update the timeDisplay with formatted countdown
+        timeDisplay.text = string.Format("{0:00}", seconds);
     }
 }
+

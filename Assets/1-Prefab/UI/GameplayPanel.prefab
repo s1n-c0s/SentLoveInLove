@@ -1385,7 +1385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameLoop: {fileID: 0}
-  timeDisplay: {fileID: 0}
+  timeDisplay: {fileID: 294586080149577695}
 --- !u!114 &294586080149577695
 MonoBehaviour:
   m_ObjectHideFlags: 0

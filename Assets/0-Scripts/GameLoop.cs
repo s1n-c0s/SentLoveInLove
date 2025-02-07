@@ -7,13 +7,15 @@ using System.Collections;
 public class GameLoop : MonoBehaviour
 {
     [SerializeField] private float gameTimeLimit = 35f;
+    public float GameTimeLimitSeconds => gameTimeLimit;
     [SerializeField] private PlaceMe placeMe;
     [SerializeField] private DetectTargets detectTargets;
-    [SerializeField] private IHowToPlay howToPlay; 
+    [SerializeField] private IHowToPlay howToPlay;
 
     private List<Person> placedPersons = new List<Person>();
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
+    public float GameTime => gameTime;
     private bool isGameRunning;
 
     public GridGenerator GridGenerator { get; private set; }
