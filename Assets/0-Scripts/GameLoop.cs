@@ -21,6 +21,7 @@ public class GameLoop : MonoBehaviour
 
     [SerializeField] private ISpamKey spamKeyA;
     [SerializeField] private ISpamKey spamKeyB;
+    [SerializeField] private GameObject fxFirework;
 
     private void Awake()
     {
@@ -104,6 +105,7 @@ public class GameLoop : MonoBehaviour
         howToPlay = FindObjectOfType<IHowToPlay>();
         howToPlay.ShowHowToPlayPanels();
         placeMe.CanPlace = true;
+        fxFirework.SetActive(false);
     }
 
     private void SetGame()
@@ -147,6 +149,7 @@ public class GameLoop : MonoBehaviour
         GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
         EnableBillboardSprites();
         SwitchToEndCamera();
+        fxFirework.SetActive(true);
     }
 
     private void EnableBillboardSprites()
