@@ -5,14 +5,14 @@ using PrimeTween;
 public class IProgressShake : MonoBehaviour
 {
     private RectTransform rectTransform;
-    private Slider slider;
+    [SerializeField] private Slider slider;
     private float previousValue;
     private bool isShaking;
 
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        slider = GetComponent<Slider>();
+        //slider = GetComponent<Slider>();
 
         if (slider != null)
         {
