@@ -1717,6 +1717,7 @@ GameObject:
   - component: {fileID: 4426656300109955049}
   - component: {fileID: 5812108655208353779}
   - component: {fileID: 7327280768507032418}
+  - component: {fileID: 8496582101969841626}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1771,7 +1772,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1662674723, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
+  m_Sprite: {fileID: -61088757, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1781,6 +1782,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8496582101969841626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4381824015916834825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0de3d29387318342ba8ec63a53111f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPersonA: 0
+  spriteRenderer: {fileID: 7327280768507032418}
+  spriteSequence:
+  - {fileID: -61088757, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
+  - {fileID: -1320837711, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
+  frameRate: 0.5
 --- !u!1 &4502290810541419198
 GameObject:
   m_ObjectHideFlags: 0
@@ -2902,6 +2921,7 @@ GameObject:
   - component: {fileID: 7818414851885722473}
   - component: {fileID: 4127074510048019248}
   - component: {fileID: 8945521924061847045}
+  - component: {fileID: 5856003014985305069}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -2956,7 +2976,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 44232580, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
+  m_Sprite: {fileID: -50730340, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2966,6 +2986,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5856003014985305069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660718557427647722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0de3d29387318342ba8ec63a53111f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPersonA: 1
+  spriteRenderer: {fileID: 8945521924061847045}
+  spriteSequence:
+  - {fileID: -379743306, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
+  - {fileID: -50730340, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
+  frameRate: 0.5
 --- !u!1 &7914540432236013604
 GameObject:
   m_ObjectHideFlags: 0

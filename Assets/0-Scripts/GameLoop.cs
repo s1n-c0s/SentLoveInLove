@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
-using PrimeTween;
 using System.Collections;
 
 public class GameLoop : MonoBehaviour
@@ -20,6 +18,9 @@ public class GameLoop : MonoBehaviour
 
     public GridGenerator GridGenerator { get; private set; }
     public CameraController CameraController { get; private set; }
+
+    [SerializeField] private ISpamKey spamKeyA;
+    [SerializeField] private ISpamKey spamKeyB;
 
     private void Awake()
     {
@@ -57,6 +58,35 @@ public class GameLoop : MonoBehaviour
         }
     }
 
+    private void HandlePlacementInput()
+    {
+        // Find ISpamKey components for UI feedback
+        ISpamKey[] spamKeys = FindObjectsOfType<ISpamKey>();
+        foreach (var key in spamKeys)
+        {
+            if (key.IsPersonA())
+                spamKeyA = key;
+            else
+                spamKeyB = key;
+        }
+
+        if (!placeMe.PlacementComplete || placedPersons == null) return;
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            PlayerDataManager.Instance.IncrementButtonPressA();
+            SpawnPackagesForPerson(0); // First person (Person A)
+            spamKeyA?.OnKeyPress(); // UI feedback
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            PlayerDataManager.Instance.IncrementButtonPressB();
+            SpawnPackagesForPerson(1); // Second person (Person B)
+            spamKeyB?.OnKeyPress(); // UI feedback
+        }
+    }
+
     private void InitializeSceneReferences()
     {
         GridGenerator = FindObjectOfType<GridGenerator>();
@@ -88,7 +118,6 @@ public class GameLoop : MonoBehaviour
 
     private void DisableBillboardSprites()
     {
-        // Cache all billboard sprites once to improve performance
         if (billboardSprites.Count == 0)
             billboardSprites.AddRange(FindObjectsOfType<BillboardSprite>());
 
@@ -128,23 +157,6 @@ public class GameLoop : MonoBehaviour
         }
     }
 
-    private void HandlePlacementInput()
-    {
-        if (!placeMe.PlacementComplete || placedPersons == null) return;
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            PlayerDataManager.Instance.IncrementButtonPressA();
-            SpawnPackagesForPerson(0); // First person (Person A)
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            PlayerDataManager.Instance.IncrementButtonPressB();
-            SpawnPackagesForPerson(1); // Second person (Person B)
-        }
-    }
-
     private void SpawnPackagesForPerson(int personIndex)
     {
         placedPersons = placeMe.GetPlacedPersons();
@@ -161,11 +173,11 @@ public class GameLoop : MonoBehaviour
 
     public void SwitchToEndCamera()
     {
-        CameraController.SwitchToCamera(1); // Switch to endVirtualCamera
+        CameraController.SwitchToCamera(1);
     }
 
     public void SwitchToMainCamera()
     {
-        CameraController.SwitchToCamera(0); // Switch to mainVirtualCamera
+        CameraController.SwitchToCamera(0);
     }
 }
