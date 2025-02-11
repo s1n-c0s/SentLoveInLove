@@ -122,6 +122,7 @@ public class GameLoop : MonoBehaviour
         detectTargets.enabled = true;
 
         StartCoroutine(UpdateGameTime());
+        SoundFX.Instance.PlaySound("Clock");
     }
 
     private void DisableBillboardSprites()
@@ -151,6 +152,7 @@ public class GameLoop : MonoBehaviour
 
     private void EndGame()
     {
+        // SoundFX.Instance.PlaySound("Clock");
         isGameRunning = false;
         GameManager.Instance.ChangeState(GameManager.GameState.EndGame);
         EnableBillboardSprites();

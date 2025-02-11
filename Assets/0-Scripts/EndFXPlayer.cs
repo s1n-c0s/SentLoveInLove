@@ -13,6 +13,7 @@ public class EndFXPlayer : MonoBehaviour
 
     public void PlayCrownFX()
     {
+        SoundFX.Instance.PlaySound("Crown");
         endFX[1].SetActive(true);
     }
 
