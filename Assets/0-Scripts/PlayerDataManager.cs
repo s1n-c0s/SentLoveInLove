@@ -129,6 +129,46 @@ public class PlayerDataManager : MonoBehaviour
         return aScore > bScore ? 0 : bScore > aScore ? 1 : -1;
     }
 
+    private int lastWinner = -1; // -1 means no previous winner
+
+    public void CheckAndUpdateFX()
+    {
+        EndFXPlayer[] endFXPlayers = FindObjectsOfType<EndFXPlayer>();
+
+        int aScore = playerData.ButtonPressA + playerData.TileA;
+        int bScore = playerData.ButtonPressB + playerData.TileB;
+
+        int currentWinner = (aScore > bScore) ? 0 : (bScore > aScore) ? 1 : -1; // 0 = A, 1 = B, -1 = Tie
+
+        if (currentWinner == lastWinner) return; // No need to update if nothing changed
+
+        foreach (var fxPlayer in endFXPlayers)
+        {
+            fxPlayer.PlayAreaFX(); // Keep AreaFX always active
+
+            if (currentWinner == -1) // If tied, both players get CrownFX
+            {
+                fxPlayer.PlayCrownFX();
+            }
+            else if (currentWinner == 0) // Player A leads
+            {
+                if (fxPlayer.CompareTag("PersonA"))
+                    fxPlayer.PlayCrownFX();
+                else
+                    fxPlayer.DisableCrownFX(); // Ensure PersonB’s FX is turned off
+            }
+            else if (currentWinner == 1) // Player B leads
+            {
+                if (fxPlayer.CompareTag("PersonB"))
+                    fxPlayer.PlayCrownFX();
+                else
+                    fxPlayer.DisableCrownFX(); // Ensure PersonA’s FX is turned off
+            }
+        }
+
+        lastWinner = currentWinner; // Update last winner to avoid redundant updates
+    }
+
 
     public void SavePlayerData(string playerNameA, int tileA, int selectCharacterA, int buttonPressA, int packageReceivedA, string playerNameB, int tileB, int selectCharacterB, int buttonPressB, int packageReceivedB)
     {
@@ -180,6 +220,7 @@ public class PlayerDataManager : MonoBehaviour
         if (playerData != null)
         {
             playerData.IncrementPackageReceivedA();
+            CheckAndUpdateFX(); // Update FX when score changes
         }
     }
 
@@ -188,8 +229,10 @@ public class PlayerDataManager : MonoBehaviour
         if (playerData != null)
         {
             playerData.IncrementPackageReceivedB();
+            CheckAndUpdateFX(); // Update FX when score changes
         }
     }
+
 
     public void IncrementTileA()
     {
