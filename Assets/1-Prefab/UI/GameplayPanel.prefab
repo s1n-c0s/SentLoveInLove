@@ -154,7 +154,7 @@ MonoBehaviour:
   - {fileID: 6455592661587810739}
   - {fileID: 2979168318323760343}
   progressBar: {fileID: 1631849598699944178}
-  showDuration: 2
+  showDuration: 1.25
   isReadyToPlayComplete: 0
 --- !u!1 &1631849598699944178
 GameObject:
