@@ -44,7 +44,7 @@ public class PlaceMe : MonoBehaviour
         GameObject prefabToSpawn = isNextPrefabA ? _prefabA : _prefabB;
 
         if (prefabToSpawn == null) return;
-
+        SoundFX.Instance.PlaySound("ButtonHover");
         GameObject spawnedObject = LeanPool.Spawn(prefabToSpawn, centerPosition, Quaternion.identity);
         spawnedObject.transform.SetParent(node.transform);
         Debug.Log($"{prefabToSpawn.name} placed at {centerPosition}");
