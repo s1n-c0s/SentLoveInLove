@@ -792,7 +792,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 480, y: 87.9335}
+  m_SizeDelta: {x: 480, y: 138.938}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &7365506657544241014
 CanvasRenderer:
@@ -822,9 +822,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Concept Idea by Sikarin Y. & IF Staff
-
-    Developed by Thanakrit Ph.'
+  m_text: "Check-in \n#LoveWithQuantum\n\nConcept Idea by Sikarin Y. & IF Staff\nDeveloped
+    by Thanakrit Ph."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
   m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,
