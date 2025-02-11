@@ -23,6 +23,7 @@ public class IHoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (rectTransform.localScale != hoverScale)
         {
+            SoundFX.Instance.PlaySound("ButtonHover");
             Tween.Scale(rectTransform, hoverScale, 0.2f);
         }
     }
