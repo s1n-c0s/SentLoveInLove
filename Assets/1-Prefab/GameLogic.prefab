@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80187f32e8cf25c4f8468cca1b0fed85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameTimeLimit: 25
+  gameTimeLimit: 22
   placeMe: {fileID: 0}
   detectTargets: {fileID: 0}
   howToPlay: {fileID: 0}
