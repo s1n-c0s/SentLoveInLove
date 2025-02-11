@@ -305,6 +305,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9dd091c9574732847897f7850f8a5aa0, type: 3}
   - {fileID: 8300000, guid: 27005faa97b342c4ca0592c81ca1bc78, type: 3}
   - {fileID: 8300000, guid: 4d78d8b95f460284babee199492e569d, type: 3}
+  - {fileID: 8300000, guid: 6ac5eb7a97ad20449beaf29296316013, type: 3}
   poolSize: 10
   pitchRange: {x: 0.8, y: 1.2}
 --- !u!1 &1593080621942673943
