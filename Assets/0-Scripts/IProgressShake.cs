@@ -27,7 +27,7 @@ public class IProgressShake : MonoBehaviour
         {
             isShaking = true;
             // Restart the shake effect on every significant value change
-            Tween.ShakeScale(rectTransform, new Vector3(0.2f, 0.2f, 0f), 0.3f).OnComplete(() =>
+            Tween.ShakeScale(rectTransform, new Vector3(0.4f, 0.4f, 0f), 0.4f).OnComplete(() =>
             {
                 isShaking = false; // Allow shaking again after it finishes
             });

@@ -1772,7 +1772,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -61088757, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
+  m_Sprite: {fileID: -379743306, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1797,8 +1797,8 @@ MonoBehaviour:
   isPersonA: 0
   spriteRenderer: {fileID: 7327280768507032418}
   spriteSequence:
-  - {fileID: -61088757, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
-  - {fileID: -1320837711, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
+  - {fileID: -379743306, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
+  - {fileID: -50730340, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
   frameRate: 0.5
 --- !u!1 &4502290810541419198
 GameObject:
@@ -2976,7 +2976,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -50730340, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
+  m_Sprite: {fileID: -61088757, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3001,8 +3001,8 @@ MonoBehaviour:
   isPersonA: 1
   spriteRenderer: {fileID: 8945521924061847045}
   spriteSequence:
-  - {fileID: -379743306, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
-  - {fileID: -50730340, guid: bc361bf5aa6ee4e41934bcfeea2d146c, type: 3}
+  - {fileID: -61088757, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
+  - {fileID: -1320837711, guid: 10e9662af62d7e646b44d07577c14051, type: 3}
   frameRate: 0.5
 --- !u!1 &7914540432236013604
 GameObject:
