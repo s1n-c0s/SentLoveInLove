@@ -51,7 +51,7 @@ MonoBehaviour:
   tileLayer:
     serializedVersion: 2
     m_Bits: 64
-  explosionEffect: {fileID: 4238267766690706522, guid: 2ca5be8c6b87f9a49a8084801cac1740,
+  explosionEffect: {fileID: 5634767591545691478, guid: 05bc110473df9574f8a94afc5484e1b0,
     type: 3}
 --- !u!54 &4190113970068960374
 Rigidbody:

@@ -16,7 +16,7 @@ public class BombCapture : MonoBehaviour
             GameObject fx = LeanPool.Spawn(explosionEffect, transform.position, Quaternion.identity);
             LeanPool.Despawn(fx, 2f); // Despawn after 2 seconds
             // Tween.ShakeCamera(Camera.main, 0.5f, 0.1f); // Shake camera on bomb activation
-            string ownerTag = package.targetPerson.CompareTag("PersonA") ? "PersonA" : "PersonB";
+            string ownerTag = package.targetPerson.CompareTag("PersonA") ? "PersonB" : "PersonA";
             CaptureTilesAround(transform.position, ownerTag);
             LeanPool.Despawn(gameObject);
         }

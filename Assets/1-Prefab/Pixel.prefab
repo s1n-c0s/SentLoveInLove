@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 427619776915663761}
   - component: {fileID: 3725747528933349130}
   - component: {fileID: 3782136805208632122}
+  - component: {fileID: 7233526765659368976}
   m_Layer: 6
   m_Name: Pixel
   m_TagString: Tile
@@ -241,6 +242,23 @@ MonoBehaviour:
     probability: 3.2
   node: {fileID: 0}
   collider: {fileID: 0}
+--- !u!114 &7233526765659368976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3600933413957533853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88c0220bfa92c747ad1a4f429003820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bombPrefab: {fileID: 1535849427705425821, guid: 7488306f63432364fbcb97c7cba598e9,
+    type: 3}
+  bombLifetime: 10
+  minDistance: 2.5
+  initialSpawnDelay: 3
 --- !u!1 &7270083177640931173
 GameObject:
   m_ObjectHideFlags: 0
