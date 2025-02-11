@@ -120,6 +120,16 @@ public class PlayerDataManager : MonoBehaviour
         }
     }
 
+
+    public int GetWinner()
+    {
+        int aScore = playerData.ButtonPressA + playerData.TileA;
+        int bScore = playerData.ButtonPressB + playerData.TileB;
+
+        return aScore > bScore ? 0 : bScore > aScore ? 1 : -1;
+    }
+
+
     public void SavePlayerData(string playerNameA, int tileA, int selectCharacterA, int buttonPressA, int packageReceivedA, string playerNameB, int tileB, int selectCharacterB, int buttonPressB, int packageReceivedB)
     {
         playerData = new PlayerData(playerNameA, tileA, selectCharacterA, buttonPressA, packageReceivedA, playerNameB, tileB, selectCharacterB, buttonPressB, packageReceivedB);

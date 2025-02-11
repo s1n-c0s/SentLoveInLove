@@ -156,7 +156,33 @@ public class GameLoop : MonoBehaviour
         EnableBillboardSprites();
         SwitchToEndCamera();
         fxFirework.SetActive(true);
+
+        // Determine winner
+        int winner = PlayerDataManager.Instance.GetWinner();
+        EndFXPlayer[] endFXPlayers = FindObjectsOfType<EndFXPlayer>(); // Get both players' EndFXPlayer
+
+        foreach (var fxPlayer in endFXPlayers)
+        {
+            fxPlayer.PlayAreaFX(); // Activate general area FX
+
+            if (winner == 0 && fxPlayer.CompareTag("PersonA")) // Player A wins
+            {
+                // Debug.Log("Player A Wins!");
+                fxPlayer.PlayCrownFX();
+            }
+            else if (winner == 1 && fxPlayer.CompareTag("PersonB")) // Player B wins
+            {
+                // Debug.Log("Player B Wins!");
+                fxPlayer.PlayCrownFX();
+            }
+            else if (winner == -1) // Tie case
+            {
+                // Debug.Log("It's a Tie!");
+                fxPlayer.PlayHeartFX(); // Activate CrownFX for both players
+            }
+        }
     }
+
 
     private void EnableBillboardSprites()
     {
