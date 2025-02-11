@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TileCapture : MonoBehaviour
@@ -18,41 +20,83 @@ public class TileCapture : MonoBehaviour
     private void Start()
     {
         tileRenderers = GetComponentsInChildren<Renderer>(true);
-        // UpdateTileMaterial();
+        // foreach (var renderer in tileRenderers)
+        // {
+        //     renderer.material = defaultMaterial;
+        // }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<PackageMover>(out var package))
         {
-            SetOwner(package.targetPerson.CompareTag("PersonA") ? "PersonA" : "PersonB");
+            if (package.targetPerson.CompareTag("PersonB"))
+            {
+                if (currentOwner != Owner.PersonA)
+                {
+                    if (currentOwner == Owner.PersonB)
+                    {
+                        PlayerDataManager.Instance.DecrementTileB();
+                    }
+                    PlayerDataManager.Instance.IncrementTileA();
+                    currentOwner = Owner.PersonA;
+                    UpdateTileMaterial();
+                }
+            }
+            else if (package.targetPerson.CompareTag("PersonA"))
+            {
+                if (currentOwner != Owner.PersonB)
+                {
+                    if (currentOwner == Owner.PersonA)
+                    {
+                        PlayerDataManager.Instance.DecrementTileA();
+                    }
+                    PlayerDataManager.Instance.IncrementTileB();
+                    currentOwner = Owner.PersonB;
+                    UpdateTileMaterial();
+                }
+            }
         }
-        else if (other.CompareTag("PersonA") || other.CompareTag("PersonB"))
+        else if (other.CompareTag("PersonA"))
         {
-            SetOwner(other.tag);
+            if (currentOwner != Owner.PersonA)
+            {
+                if (currentOwner == Owner.PersonB)
+                {
+                    PlayerDataManager.Instance.DecrementTileB();
+                }
+                PlayerDataManager.Instance.IncrementTileA();
+                currentOwner = Owner.PersonA;
+                UpdateTileMaterial();
+            }
+        }
+        else if (other.CompareTag("PersonB"))
+        {
+            if (currentOwner != Owner.PersonB)
+            {
+                if (currentOwner == Owner.PersonA)
+                {
+                    PlayerDataManager.Instance.DecrementTileA();
+                }
+                PlayerDataManager.Instance.IncrementTileB();
+                currentOwner = Owner.PersonB;
+                UpdateTileMaterial();
+            }
         }
     }
 
     public void SetOwner(string ownerTag)
     {
-        if (ownerTag == "PersonA" && currentOwner != Owner.PersonA)
-        {
-            UpdateOwnership(Owner.PersonA, Owner.PersonB, personAMaterial);
-        }
-        else if (ownerTag == "PersonB" && currentOwner != Owner.PersonB)
-        {
-            UpdateOwnership(Owner.PersonB, Owner.PersonA, personBMaterial);
-        }
-    }
+        Owner newOwner = ownerTag == "PersonA" ? Owner.PersonA : Owner.PersonB;
 
-    private void UpdateOwnership(Owner newOwner, Owner previousOwner, Material newMaterial)
-    {
-        // Only decrement if the current owner is different from the previous owner
-        if (previousOwner == Owner.PersonA)
+        if (currentOwner == newOwner) return; // Prevent unnecessary updates
+
+        // Decrement previous owner's tile count if the tile was owned
+        if (currentOwner == Owner.PersonA)
         {
             PlayerDataManager.Instance.DecrementTileA();
         }
-        else if (previousOwner == Owner.PersonB)
+        else if (currentOwner == Owner.PersonB)
         {
             PlayerDataManager.Instance.DecrementTileB();
         }
@@ -68,30 +112,43 @@ public class TileCapture : MonoBehaviour
         }
 
         currentOwner = newOwner;
-        ApplyMaterial(newMaterial);
+        UpdateTileMaterial();
     }
 
-    private void ApplyMaterial(Material material)
+
+    private void OnTriggerExit(Collider other)
     {
-        foreach (var renderer in tileRenderers)
+        if (other.CompareTag("PersonA") && currentOwner == Owner.PersonA)
         {
-            renderer.material = material;
+            PlayerDataManager.Instance.DecrementTileA();
+            currentOwner = Owner.None;
+            UpdateTileMaterial();
+        }
+        else if (other.CompareTag("PersonB") && currentOwner == Owner.PersonB)
+        {
+            PlayerDataManager.Instance.DecrementTileB();
+            currentOwner = Owner.None;
+            UpdateTileMaterial();
         }
     }
 
     private void UpdateTileMaterial()
     {
-        switch (currentOwner)
+        foreach (var renderer in tileRenderers)
         {
-            case Owner.PersonA:
-                ApplyMaterial(personAMaterial);
-                break;
-            case Owner.PersonB:
-                ApplyMaterial(personBMaterial);
-                break;
-            default:
-                ApplyMaterial(defaultMaterial);
-                break;
+            switch (currentOwner)
+            {
+                case Owner.PersonA:
+                    renderer.material = personAMaterial;
+                    break;
+                case Owner.PersonB:
+                    renderer.material = personBMaterial;
+                    break;
+                default:
+                    renderer.material = defaultMaterial;
+                    break;
+            }
         }
     }
 }
+
