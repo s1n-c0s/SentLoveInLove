@@ -4,21 +4,27 @@ using System.Collections;
 
 public class GameLoop : MonoBehaviour
 {
+    [Header("Gameplay")]
     [SerializeField] private float gameTimeLimit = 35f;
     public float GameTimeLimitSeconds => gameTimeLimit;
+
+    [Header("References")]
     [SerializeField] private PlaceMe placeMe;
     [SerializeField] private DetectTargets detectTargets;
     [SerializeField] private IHowToPlay howToPlay;
 
+    [Header("State")]
     private List<Person> placedPersons = new List<Person>();
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
     public float GameTime => gameTime;
     private bool isGameRunning;
 
+    //[Header("Scene References")]
     public GridGenerator GridGenerator { get; private set; }
     public CameraController CameraController { get; private set; }
 
+    [Header("UI Feedback")]
     [SerializeField] private ISpamKey spamKeyA;
     [SerializeField] private ISpamKey spamKeyB;
     [SerializeField] private GameObject fxFirework;
