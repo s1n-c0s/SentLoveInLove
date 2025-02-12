@@ -12,47 +12,23 @@ public class SpawnBomb : MonoBehaviour
 
     private static int currentBombCount = 0;
     private const int maxBombs = 3;
-    private static List<SpawnBomb> availableTiles = new List<SpawnBomb>();
+    private static List<SpawnBomb> availableTiles = new List<SpawnBomb>();  // Ensure this is cleared and repopulated
     private static List<Vector3> activeBombPositions = new List<Vector3>();
 
     private bool hasBomb = false;
     private Coroutine spawnCoroutine;
 
-    private void Awake()
-    {
-        availableTiles.Add(this);
-    }
-
     private void OnDestroy()
     {
         availableTiles.Remove(this);
-        GameManager.GameStateChanged -= OnGameStateChanged;
     }
 
     private void Start()
     {
-        GameManager.GameStateChanged += OnGameStateChanged;
-
+        availableTiles.Add(this);
         if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
         {
             spawnCoroutine = StartCoroutine(DelayedSpawn());
-        }
-    }
-
-    private void OnGameStateChanged(GameManager.GameState newState)
-    {
-        if (newState == GameManager.GameState.Playing)
-        {
-            if (spawnCoroutine == null)
-                spawnCoroutine = StartCoroutine(DelayedSpawn());
-        }
-        else
-        {
-            if (spawnCoroutine != null)
-            {
-                StopCoroutine(spawnCoroutine);
-                spawnCoroutine = null;
-            }
         }
     }
 
@@ -85,7 +61,7 @@ public class SpawnBomb : MonoBehaviour
     {
         yield return new WaitForSeconds(bombLifetime);
 
-        if (bomb != null && bomb.activeInHierarchy) // Ensure bomb exists before despawning
+        if (bomb != null && bomb.activeInHierarchy)
         {
             LeanPool.Despawn(bomb);
         }
@@ -93,7 +69,6 @@ public class SpawnBomb : MonoBehaviour
         hasBomb = false;
         currentBombCount--;
 
-        // Remove the correct position from active bomb list
         activeBombPositions.RemoveAll(pos => Vector3.Distance(pos, bomb.transform.position) < 0.1f);
 
         SpawnOnRandomTile();
