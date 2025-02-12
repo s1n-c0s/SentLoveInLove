@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Lean.Pool;
+using UnityEngine.SceneManagement;
 
 public class SpawnBomb : MonoBehaviour
 {
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private float bombLifetime = 5f;
-    [SerializeField] private float minDistance = 2.5f;
     [SerializeField] private float initialSpawnDelay = 3f;
 
     private static int currentBombCount = 0;
     private const int maxBombs = 3;
-    private static List<SpawnBomb> availableTiles = new List<SpawnBomb>();  // Ensure this is cleared and repopulated
+    private static List<SpawnBomb> availableTiles = new List<SpawnBomb>();
     private static List<Vector3> activeBombPositions = new List<Vector3>();
 
     private bool hasBomb = false;
@@ -25,11 +25,32 @@ public class SpawnBomb : MonoBehaviour
 
     private void Start()
     {
-        availableTiles.Add(this);
+        InitializeBombs();
+
+        // Start the bomb spawning coroutine only if the game is in playing state
         if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
         {
             spawnCoroutine = StartCoroutine(DelayedSpawn());
         }
+    }
+
+    private void InitializeBombs()
+    {
+        // Manually reset the availableTiles and activeBombPositions on scene load
+        if (availableTiles.Count == 0)
+        {
+            availableTiles = new List<SpawnBomb>(FindObjectsOfType<SpawnBomb>());
+        }
+
+        // Make sure availableTiles are populated
+        if (!availableTiles.Contains(this))
+        {
+            availableTiles.Add(this);
+        }
+
+        // Reset bomb count and active positions if needed
+        currentBombCount = 0;
+        activeBombPositions.Clear();
     }
 
     private IEnumerator DelayedSpawn()
@@ -110,5 +131,22 @@ public class SpawnBomb : MonoBehaviour
             }
         }
         return true;
+    }
+
+    // Make sure to reset the bomb pool if needed when the scene reloads
+    public static void ResetBombSpawning()
+    {
+        availableTiles.Clear();
+        activeBombPositions.Clear();
+        currentBombCount = 0;
+
+        // Populate available tiles for the new scene setup
+        availableTiles.AddRange(FindObjectsOfType<SpawnBomb>());
+    }
+
+    private void OnEnable()
+    {
+        // Reset bomb spawning when the scene is loaded or reloaded
+        ResetBombSpawning();
     }
 }
