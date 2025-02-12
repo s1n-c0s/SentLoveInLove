@@ -6,9 +6,9 @@ using Lean.Pool;
 public class SpawnBomb : MonoBehaviour
 {
     [SerializeField] private GameObject bombPrefab;
-    [SerializeField] private float bombLifetime = 5f; // Time before a bomb despawns
-    [SerializeField] private float minDistance = 2.5f; // Minimum distance between bombs
-    [SerializeField] private float initialSpawnDelay = 3f; // Delay before first spawn
+    [SerializeField] private float bombLifetime = 5f;
+    [SerializeField] private float minDistance = 2.5f;
+    [SerializeField] private float initialSpawnDelay = 3f;
 
     private static int currentBombCount = 0;
     private const int maxBombs = 3;
@@ -16,6 +16,7 @@ public class SpawnBomb : MonoBehaviour
     private static List<Vector3> activeBombPositions = new List<Vector3>();
 
     private bool hasBomb = false;
+    private Coroutine spawnCoroutine;
 
     private void Awake()
     {
@@ -25,11 +26,34 @@ public class SpawnBomb : MonoBehaviour
     private void OnDestroy()
     {
         availableTiles.Remove(this);
+        GameManager.GameStateChanged -= OnGameStateChanged;
     }
 
     private void Start()
     {
-        StartCoroutine(DelayedSpawn());
+        GameManager.GameStateChanged += OnGameStateChanged;
+
+        if (GameManager.Instance.GetCurrentState() == GameManager.GameState.Playing)
+        {
+            spawnCoroutine = StartCoroutine(DelayedSpawn());
+        }
+    }
+
+    private void OnGameStateChanged(GameManager.GameState newState)
+    {
+        if (newState == GameManager.GameState.Playing)
+        {
+            if (spawnCoroutine == null)
+                spawnCoroutine = StartCoroutine(DelayedSpawn());
+        }
+        else
+        {
+            if (spawnCoroutine != null)
+            {
+                StopCoroutine(spawnCoroutine);
+                spawnCoroutine = null;
+            }
+        }
     }
 
     private IEnumerator DelayedSpawn()
@@ -40,15 +64,19 @@ public class SpawnBomb : MonoBehaviour
 
     private void TrySpawnBomb()
     {
+        if (GameManager.Instance.GetCurrentState() != GameManager.GameState.Playing)
+            return;
+
         Vector3 spawnPosition = GetValidSpawnPosition();
         if (!hasBomb && currentBombCount < maxBombs && spawnPosition != Vector3.zero)
         {
             GameObject bomb = LeanPool.Spawn(bombPrefab, spawnPosition + Vector3.up, Quaternion.identity);
+            if (bomb == null) return;
+
             hasBomb = true;
             currentBombCount++;
             activeBombPositions.Add(spawnPosition);
 
-            // Schedule despawn and respawn
             StartCoroutine(HandleBombLifetime(bomb));
         }
     }
@@ -57,12 +85,17 @@ public class SpawnBomb : MonoBehaviour
     {
         yield return new WaitForSeconds(bombLifetime);
 
-        LeanPool.Despawn(bomb);
+        if (bomb != null && bomb.activeInHierarchy) // Ensure bomb exists before despawning
+        {
+            LeanPool.Despawn(bomb);
+        }
+
         hasBomb = false;
         currentBombCount--;
-        activeBombPositions.Remove(transform.position);
 
-        // Spawn new bomb at a random available tile
+        // Remove the correct position from active bomb list
+        activeBombPositions.RemoveAll(pos => Vector3.Distance(pos, bomb.transform.position) < 0.1f);
+
         SpawnOnRandomTile();
     }
 
@@ -79,14 +112,9 @@ public class SpawnBomb : MonoBehaviour
 
     private Vector3 GetValidSpawnPosition()
     {
-        for (int i = 0; i < 10; i++) // Try 10 times to find a valid position
+        for (int i = 0; i < 10; i++)
         {
-            Vector3 randomOffset = new Vector3(
-                Random.Range(-0.5f, 0.5f), // Slight random offset
-                0f,
-                Random.Range(-0.5f, 0.5f)
-            );
-
+            Vector3 randomOffset = new Vector3(Random.Range(-0.5f, 0.5f), 0f, Random.Range(-0.5f, 0.5f));
             Vector3 potentialPosition = transform.position + randomOffset;
 
             if (IsPositionValid(potentialPosition))
@@ -94,14 +122,14 @@ public class SpawnBomb : MonoBehaviour
                 return potentialPosition;
             }
         }
-        return Vector3.zero; // No valid position found
+        return Vector3.zero;
     }
 
     private static bool IsPositionValid(Vector3 position)
     {
         foreach (var bombPos in activeBombPositions)
         {
-            if (Vector3.Distance(position, bombPos) < 2.5f) // Ensure bombs are spread apart
+            if (Vector3.Distance(position, bombPos) < 2.5f)
             {
                 return false;
             }

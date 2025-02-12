@@ -18,6 +18,7 @@ public class BombCapture : MonoBehaviour
             // Tween.ShakeCamera(Camera.main, 0.5f, 0.1f); // Shake camera on bomb activation
             string ownerTag = package.targetPerson.CompareTag("PersonA") ? "PersonB" : "PersonA";
             CaptureTilesAround(transform.position, ownerTag);
+            SoundFX.Instance.PlaySound("BombLove");
             LeanPool.Despawn(gameObject);
         }
     }
