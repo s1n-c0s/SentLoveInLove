@@ -525,7 +525,7 @@ MonoBehaviour:
   _gridWidth: 30
   _gridHeight: 18
   _spacing: 2.2
-  _unwalkableChancePercent: 10
+  _unwalkableChancePercent: 16
 --- !u!1 &4558673007692678474
 GameObject:
   m_ObjectHideFlags: 0

@@ -175,9 +175,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentOwner: 0
-  personAMaterial: {fileID: 2100000, guid: a6a9daffd97df7545b640ad5f896c383, type: 2}
-  personBMaterial: {fileID: 2100000, guid: ebd0c11aa46d537438006b93d95858f6, type: 2}
-  defaultMaterial: {fileID: 2100000, guid: 7f0945d276e7ac449965fe5d2eb7bd1e, type: 2}
+  personAMaterial: {fileID: 2100000, guid: a44d3cec97d015340944a26efb1f7971, type: 2}
+  personBMaterial: {fileID: 2100000, guid: 2806ce35c0a6c93499cc6de04055d9d4, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 7e2dc823cb4e1cb4ab7175bd44b18a05, type: 2}
   tileRenderers: []
 --- !u!65 &427619776915663761
 BoxCollider:
@@ -230,16 +230,16 @@ MonoBehaviour:
   - visual: {fileID: 6239547291548973179}
     probability: 83.4
   - visual: {fileID: 1793688281164265595}
-    probability: 9.1
+    probability: 1
   obstacleVisuals:
   - visual: {fileID: 405107448763571967}
-    probability: 43.3
+    probability: 84.7
   - visual: {fileID: 7270083177640931173}
-    probability: 17.2
+    probability: 16.5
   - visual: {fileID: 3415091655283625337}
-    probability: 15.9
+    probability: 18.3
   - visual: {fileID: 5437740969918108652}
-    probability: 3.2
+    probability: 18.3
   node: {fileID: 0}
   collider: {fileID: 0}
 --- !u!114 &7233526765659368976
@@ -257,7 +257,6 @@ MonoBehaviour:
   bombPrefab: {fileID: 1535849427705425821, guid: 7488306f63432364fbcb97c7cba598e9,
     type: 3}
   bombLifetime: 10
-  minDistance: 2.5
   initialSpawnDelay: 3
 --- !u!1 &7270083177640931173
 GameObject:

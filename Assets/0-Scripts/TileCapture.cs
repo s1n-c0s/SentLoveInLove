@@ -20,10 +20,10 @@ public class TileCapture : MonoBehaviour
     private void Start()
     {
         tileRenderers = GetComponentsInChildren<Renderer>(true);
-        // foreach (var renderer in tileRenderers)
-        // {
-        //     renderer.material = defaultMaterial;
-        // }
+        foreach (var renderer in tileRenderers)
+        {
+            renderer.material = defaultMaterial;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

@@ -59,29 +59,35 @@ public class LandCheck : MonoBehaviour
 
     private GameObject SelectVisual(List<VisualProbability> visuals)
     {
+        // Filter out visuals with 0 probability
+        var validVisuals = visuals.FindAll(v => v.probability > 0);
+        if (validVisuals.Count == 0) return null;
+
+        // Calculate total probability
         float totalProbability = 0f;
-        foreach (var visual in visuals)
+        foreach (var visual in validVisuals)
         {
             totalProbability += visual.probability;
         }
 
+        // Generate random point within total probability range
         float randomPoint = Random.value * totalProbability;
+        float cumulativeProbability = 0f;
 
-        foreach (var visual in visuals)
+        // Find which visual the random point lands on
+        foreach (var visual in validVisuals)
         {
-            if (randomPoint < visual.probability)
+            cumulativeProbability += visual.probability;
+            if (randomPoint <= cumulativeProbability)
             {
                 return visual.visual;
             }
-            else
-            {
-                randomPoint -= visual.probability;
-            }
         }
 
-        return null;
+        // Fallback (should rarely happen due to floating point precision)
+        return validVisuals[validVisuals.Count - 1].visual;
     }
-
+    
     private void HideAllGround()
     {
         foreach (var visual in GroundVisuals)
