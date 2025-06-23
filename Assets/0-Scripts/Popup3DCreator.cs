@@ -58,6 +58,8 @@ public class Popup3DCreator : MonoBehaviour
 
         target.localScale = targetScale;
     }
+    private float _currentYRotationVelocity = 0f;
+    [SerializeField] private float _rotationSmoothTime = 0.3f;
 
     private void FaceMouse()
     {
@@ -70,12 +72,17 @@ public class Popup3DCreator : MonoBehaviour
         {
             Vector3 hitPoint = ray.GetPoint(distance);
             Vector3 directionToMouse = hitPoint - _currentPopup.transform.position;
-            directionToMouse.y = 0; // optional: rotate only on Y-axis
+            directionToMouse.y = 0;
 
             if (directionToMouse.sqrMagnitude > 0.01f)
             {
-                _currentPopup.transform.rotation = Quaternion.LookRotation(directionToMouse);
+                float targetYRotation = Quaternion.LookRotation(directionToMouse).eulerAngles.y;
+                float currentY = _currentPopup.transform.eulerAngles.y;
+
+                float smoothedY = Mathf.SmoothDampAngle(currentY, targetYRotation, ref _currentYRotationVelocity, _rotationSmoothTime);
+                _currentPopup.transform.rotation = Quaternion.Euler(0f, smoothedY, 0f);
             }
         }
     }
+
 }
