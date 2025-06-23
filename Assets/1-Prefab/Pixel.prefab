@@ -230,16 +230,16 @@ MonoBehaviour:
   - visual: {fileID: 6239547291548973179}
     probability: 83.4
   - visual: {fileID: 1793688281164265595}
-    probability: 9.1
+    probability: 1
   obstacleVisuals:
   - visual: {fileID: 405107448763571967}
-    probability: 43.3
+    probability: 84.7
   - visual: {fileID: 7270083177640931173}
-    probability: 17.2
+    probability: 16.5
   - visual: {fileID: 3415091655283625337}
-    probability: 15.9
+    probability: 18.3
   - visual: {fileID: 5437740969918108652}
-    probability: 3.2
+    probability: 18.3
   node: {fileID: 0}
   collider: {fileID: 0}
 --- !u!114 &7233526765659368976
@@ -257,7 +257,6 @@ MonoBehaviour:
   bombPrefab: {fileID: 1535849427705425821, guid: 7488306f63432364fbcb97c7cba598e9,
     type: 3}
   bombLifetime: 10
-  minDistance: 2.5
   initialSpawnDelay: 3
 --- !u!1 &7270083177640931173
 GameObject:
