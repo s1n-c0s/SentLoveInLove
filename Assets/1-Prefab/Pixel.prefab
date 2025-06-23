@@ -175,8 +175,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentOwner: 0
-  personAMaterial: {fileID: 2100000, guid: a6a9daffd97df7545b640ad5f896c383, type: 2}
-  personBMaterial: {fileID: 2100000, guid: ebd0c11aa46d537438006b93d95858f6, type: 2}
+  personAMaterial: {fileID: 2100000, guid: a44d3cec97d015340944a26efb1f7971, type: 2}
+  personBMaterial: {fileID: 2100000, guid: 2806ce35c0a6c93499cc6de04055d9d4, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 7e2dc823cb4e1cb4ab7175bd44b18a05, type: 2}
   tileRenderers: []
 --- !u!65 &427619776915663761
