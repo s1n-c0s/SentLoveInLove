@@ -124,8 +124,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _package:
   - {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2, type: 3}
-  - {fileID: 8368223773260838323, guid: a9d9ecc9b4be5754f9dd6be12708ddf6, type: 3}
-  - {fileID: 5677173410238703765, guid: ff12d2e01489c024885ffcd1d051e1eb, type: 3}
 --- !u!65 &3061622243947931912
 BoxCollider:
   m_ObjectHideFlags: 0
