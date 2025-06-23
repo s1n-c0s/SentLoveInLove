@@ -18,7 +18,7 @@ public class Popup3DCreator : MonoBehaviour
 
     void Update()
     {
-        FaceCamera();
+        FaceMouse();
     }
 
     public void ShowPopup()
@@ -59,15 +59,23 @@ public class Popup3DCreator : MonoBehaviour
         target.localScale = targetScale;
     }
 
-    private void FaceCamera()
+    private void FaceMouse()
     {
         if (_currentPopup == null || Camera.main == null) return;
 
-        Vector3 directionToCamera = Camera.main.transform.position - _currentPopup.transform.position;
-        directionToCamera.y = 0; // optional: keep upright and only rotate horizontally
-        if (directionToCamera.sqrMagnitude > 0.01f)
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, _currentPopup.transform.position);
+
+        if (groundPlane.Raycast(ray, out float distance))
         {
-            _currentPopup.transform.rotation = Quaternion.LookRotation(directionToCamera);
+            Vector3 hitPoint = ray.GetPoint(distance);
+            Vector3 directionToMouse = hitPoint - _currentPopup.transform.position;
+            directionToMouse.y = 0; // optional: rotate only on Y-axis
+
+            if (directionToMouse.sqrMagnitude > 0.01f)
+            {
+                _currentPopup.transform.rotation = Quaternion.LookRotation(directionToMouse);
+            }
         }
     }
 }
