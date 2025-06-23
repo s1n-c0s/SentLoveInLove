@@ -6,67 +6,148 @@ public class PlayerKeyConfig
 {
     [Header("Player Settings")]
     public string playerName;
-    public KeyCode keyCode;
+    public KeyCode[] availableKeys;
     public int personIndex;
     public bool isPersonA;
-
+    
+    [Header("Current State")]
+    [SerializeField] private KeyCode currentRandomKey;
+    public KeyCode CurrentRandomKey => currentRandomKey;
+    
     [Header("Runtime References")]
     [System.NonSerialized]
     public ISpamKey spamKey;
+    
+    public void SetRandomKey()
+    {
+        if (availableKeys.Length > 0)
+        {
+            int randomIndex = Random.Range(0, availableKeys.Length);
+            currentRandomKey = availableKeys[randomIndex];
+        }
+    }
+    
+    public bool IsCorrectKey(KeyCode pressedKey)
+    {
+        return pressedKey == currentRandomKey;
+    }
 }
 
 public class KeyHandler : MonoBehaviour
 {
     [Header("Player Configurations")]
-    [SerializeField]
-    private PlayerKeyConfig[] playerConfigs = new PlayerKeyConfig[]
+    [SerializeField] private PlayerKeyConfig[] playerConfigs = new PlayerKeyConfig[]
     {
-        new PlayerKeyConfig
-        {
-            playerName = "Player A",
-            keyCode = KeyCode.U,
-            personIndex = 0,
-            isPersonA = true
+        new PlayerKeyConfig 
+        { 
+            playerName = "Player A", 
+            availableKeys = new KeyCode[] { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D },
+            personIndex = 0, 
+            isPersonA = true 
         },
-        new PlayerKeyConfig
-        {
-            playerName = "Player B",
-            keyCode = KeyCode.I,
-            personIndex = 1,
-            isPersonA = false
+        new PlayerKeyConfig 
+        { 
+            playerName = "Player B", 
+            availableKeys = new KeyCode[] { KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow },
+            personIndex = 1, 
+            isPersonA = false 
         }
     };
-
+    
     [Header("References")]
     private PlaceMe placeMe;
     private List<Person> placedPersons;
+    
+    [Header("Debug Info")]
+    [SerializeField] private bool showDebugInfo = true;
 
     private void Start()
     {
         InitializeReferences();
+        GenerateRandomKeysForAllPlayers();
     }
 
     private void Update()
     {
         if (!CanProcessInput()) return;
 
-        // Handle all configured keys
+        // Check input for all players
         foreach (var config in playerConfigs)
         {
-            if (Input.GetKeyDown(config.keyCode))
+            CheckPlayerInput(config);
+        }
+    }
+
+    private void CheckPlayerInput(PlayerKeyConfig config)
+    {
+        // Check all available keys for this player
+        foreach (KeyCode key in config.availableKeys)
+        {
+            if (Input.GetKeyDown(key))
             {
-                HandleKeyPress(config);
+                if (config.IsCorrectKey(key))
+                {
+                    // Correct key pressed!
+                    HandleCorrectKeyPress(config, key);
+                }
+                else
+                {
+                    // Wrong key pressed
+                    HandleWrongKeyPress(config, key);
+                }
+                break; // Only process one key press per frame per player
             }
         }
+    }
+
+    private void HandleCorrectKeyPress(PlayerKeyConfig config, KeyCode pressedKey)
+    {
+        if (showDebugInfo)
+            Debug.Log($"{config.playerName} pressed correct key: {pressedKey}");
+        
+        // Increment appropriate button press count
+        if (config.isPersonA)
+            PlayerDataManager.Instance.IncrementButtonPressA();
+        else
+            PlayerDataManager.Instance.IncrementButtonPressB();
+        
+        // Spawn packages for the specified person
+        SpawnPackagesForPerson(config);
+        
+        // UI feedback
+        config.spamKey?.OnKeyPress();
+        
+        // Generate new random key for this player
+        config.SetRandomKey();
+        
+        if (showDebugInfo)
+            Debug.Log($"{config.playerName} new target key: {config.CurrentRandomKey}");
+        
+        // Optional: Add sound effect for correct key
+        // SoundFX.Instance.PlaySound("CorrectKey");
+    }
+
+    private void HandleWrongKeyPress(PlayerKeyConfig config, KeyCode pressedKey)
+    {
+        if (showDebugInfo)
+            Debug.Log($"{config.playerName} pressed wrong key: {pressedKey}. Expected: {config.CurrentRandomKey}");
+        
+        // Optional: Add penalty or wrong key feedback
+        // SoundFX.Instance.PlaySound("WrongKey");
+        
+        // Optional: You could add penalties here like:
+        // - Reduce score
+        // - Add delay
+        // - Show wrong key UI feedback
     }
 
     private void InitializeReferences()
     {
         placeMe = FindObjectOfType<PlaceMe>();
-
+        
         // Find spam keys for each player
         ISpamKey[] spamKeys = FindObjectsOfType<ISpamKey>();
-
+        
         foreach (var config in playerConfigs)
         {
             foreach (var spamKey in spamKeys)
@@ -77,6 +158,16 @@ public class KeyHandler : MonoBehaviour
                     break;
                 }
             }
+        }
+    }
+
+    private void GenerateRandomKeysForAllPlayers()
+    {
+        foreach (var config in playerConfigs)
+        {
+            config.SetRandomKey();
+            if (showDebugInfo)
+                Debug.Log($"{config.playerName} initial target key: {config.CurrentRandomKey}");
         }
     }
 
@@ -92,26 +183,8 @@ public class KeyHandler : MonoBehaviour
 
         // Update placed persons list
         placedPersons = placeMe.GetPlacedPersons();
-
+        
         return placedPersons != null;
-    }
-
-    private void HandleKeyPress(PlayerKeyConfig config)
-    {
-        // Increment appropriate button press count
-        if (config.isPersonA)
-            PlayerDataManager.Instance.IncrementButtonPressA();
-        else
-            PlayerDataManager.Instance.IncrementButtonPressB();
-
-        // Spawn packages for the specified person
-        SpawnPackagesForPerson(config);
-
-        // UI feedback
-        config.spamKey?.OnKeyPress();
-
-        // Optional: Add sound effect
-        // SoundFX.Instance.PlaySound("KeyPress");
     }
 
     private void SpawnPackagesForPerson(PlayerKeyConfig config)
@@ -123,30 +196,43 @@ public class KeyHandler : MonoBehaviour
         }
 
         Person person = placedPersons[config.personIndex];
-        Debug.Log($"{config.playerName} ({config.keyCode}): Spawning packages around {person.name}...");
+        Debug.Log($"{config.playerName}: Spawning packages around {person.name}...");
         person.SpawnPackageAroundSelf();
     }
 
-    // Public methods for runtime configuration
-    public void SetPlayerKey(int playerIndex, KeyCode newKey)
+    // Public methods for accessing current target keys (for UI display)
+    public KeyCode GetCurrentTargetKey(int playerIndex)
     {
         if (playerIndex >= 0 && playerIndex < playerConfigs.Length)
         {
-            playerConfigs[playerIndex].keyCode = newKey;
+            return playerConfigs[playerIndex].CurrentRandomKey;
         }
+        return KeyCode.None;
     }
 
-    public void AddPlayer(string name, KeyCode key, int personIndex, bool isPersonA)
+    public KeyCode GetPlayerATargetKey()
     {
-        var newConfig = new PlayerKeyConfig
-        {
-            playerName = name,
-            keyCode = key,
-            personIndex = personIndex,
-            isPersonA = isPersonA
-        };
+        return GetCurrentTargetKey(0);
+    }
 
-        // This would require resizing the array or using a List instead
-        // For simplicity, you might want to use List<PlayerKeyConfig> instead of array
+    public KeyCode GetPlayerBTargetKey()
+    {
+        return GetCurrentTargetKey(1);
+    }
+
+    // Method to manually generate new random keys (if needed)
+    public void GenerateNewRandomKeys()
+    {
+        GenerateRandomKeysForAllPlayers();
+    }
+
+    // Method to get player name by index
+    public string GetPlayerName(int playerIndex)
+    {
+        if (playerIndex >= 0 && playerIndex < playerConfigs.Length)
+        {
+            return playerConfigs[playerIndex].playerName;
+        }
+        return "Unknown Player";
     }
 }
