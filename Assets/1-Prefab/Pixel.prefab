@@ -177,7 +177,7 @@ MonoBehaviour:
   currentOwner: 0
   personAMaterial: {fileID: 2100000, guid: a6a9daffd97df7545b640ad5f896c383, type: 2}
   personBMaterial: {fileID: 2100000, guid: ebd0c11aa46d537438006b93d95858f6, type: 2}
-  defaultMaterial: {fileID: 2100000, guid: 7f0945d276e7ac449965fe5d2eb7bd1e, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 7e2dc823cb4e1cb4ab7175bd44b18a05, type: 2}
   tileRenderers: []
 --- !u!65 &427619776915663761
 BoxCollider:
