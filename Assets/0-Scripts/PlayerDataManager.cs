@@ -152,10 +152,11 @@ public class PlayerDataManager : MonoBehaviour
     public void IncrementTileB() { playerData?.IncrementTileB(); }
     public void DecrementTileA()
     {
-        playerData?.DecrementTileA(); if (firstCheck == false)
+        playerData?.DecrementTileA();
+        if (firstCheck == false)
         {
-            firstCheck = true;
             CheckAndUpdateFX();
+            firstCheck = true;
         }
     }
     public void DecrementTileB() => playerData?.DecrementTileB();
