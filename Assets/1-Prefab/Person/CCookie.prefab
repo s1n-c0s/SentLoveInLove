@@ -79,10 +79,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2,
         type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 6555695914625332954}
-    - targetCorrespondingSourceObject: {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2,
-        type: 3}
       insertIndex: -1
       addedObject: {fileID: -2613321632390922973}
   m_SourcePrefab: {fileID: 100100000, guid: 2a62d049f01f23941afdba15449ca3c2, type: 3}
@@ -92,22 +88,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8411404531354416341}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6555695914625332954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8368223773260838323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be1cdaa4fa600bc4bb570c1f09602b5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DespawnFX: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa,
-    type: 3}
-  lifetime: 6
-  randomVariation: 2
 --- !u!54 &-2613321632390922973
 Rigidbody:
   m_ObjectHideFlags: 0

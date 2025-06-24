@@ -18,6 +18,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BHeart
       objectReference: {fileID: 0}
+    - target: {fileID: 893628055145575269, guid: 2a62d049f01f23941afdba15449ca3c2,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d73fbbd0481c59840a79d3980c360ca4, type: 2}
     - target: {fileID: 6056481689339937313, guid: 2a62d049f01f23941afdba15449ca3c2,
         type: 3}
       propertyPath: m_LocalPosition.x
