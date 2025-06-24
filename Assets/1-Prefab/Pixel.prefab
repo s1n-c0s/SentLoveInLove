@@ -213,6 +213,11 @@ MonoBehaviour:
   - {fileID: 963692033198113149}
   - {fileID: 963692033198113149}
   - {fileID: 963692033198113149}
+  - {fileID: 963692033198113149}
+  - {fileID: 963692033198113149}
+  - {fileID: 3487828198371877543}
+  - {fileID: 3487828198371877543}
+  - {fileID: 3487828198371877543}
   - {fileID: 3487828198371877543}
   - {fileID: 3487828198371877543}
   - {fileID: 4884711692026817934}
@@ -241,7 +246,7 @@ MonoBehaviour:
   - visual: {fileID: 7270083177640931173}
     probability: 46.2
   - visual: {fileID: 3415091655283625337}
-    probability: 47
+    probability: 70.3
   - visual: {fileID: 5437740969918108652}
     probability: 18.3
   townUpgrade: {fileID: 0}
