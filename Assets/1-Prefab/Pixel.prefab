@@ -119,6 +119,111 @@ Transform:
   - {fileID: 6995616060109753082}
   m_Father: {fileID: 337968250128462691}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3552497173294527611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8141776786688973455}
+  - component: {fileID: 7097835115151465513}
+  - component: {fileID: 8337838852541792985}
+  - component: {fileID: 6794152083148334694}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8141776786688973455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552497173294527611}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 337968250128462691}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &7097835115151465513
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552497173294527611}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &8337838852541792985
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552497173294527611}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0fdbbfb2fd322b8438b755d680fbf200, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6794152083148334694
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552497173294527611}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3600933413957533853
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,9 +234,10 @@ GameObject:
   m_Component:
   - component: {fileID: 337968250128462691}
   - component: {fileID: 972983236790911930}
+  - component: {fileID: 1369345607831481369}
+  - component: {fileID: 3782136805208632122}
   - component: {fileID: 427619776915663761}
   - component: {fileID: 3725747528933349130}
-  - component: {fileID: 3782136805208632122}
   - component: {fileID: 7233526765659368976}
   m_Layer: 6
   m_Name: Pixel
@@ -160,6 +266,7 @@ Transform:
   - {fileID: 785880451597066619}
   - {fileID: 2130394731173605335}
   - {fileID: 4628974973711468886}
+  - {fileID: 8141776786688973455}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &972983236790911930
@@ -179,6 +286,55 @@ MonoBehaviour:
   personBMaterial: {fileID: 2100000, guid: 2806ce35c0a6c93499cc6de04055d9d4, type: 2}
   defaultMaterial: {fileID: 2100000, guid: 7e2dc823cb4e1cb4ab7175bd44b18a05, type: 2}
   tileRenderers: []
+--- !u!114 &1369345607831481369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3600933413957533853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd21d573885f1f54881b0dbfe6451e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeVisuals:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 3415091655283625337}
+  - {fileID: 5437740969918108652}
+  - {fileID: 3552497173294527611}
+  canUpgrade: 0
+  currentUpgradeLevel: 0
+--- !u!114 &3782136805208632122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3600933413957533853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586385d833eb8d94b98795a4bf8eb820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GroundVisuals:
+  - visual: {fileID: 6239547291548973179}
+    probability: 83.4
+  - visual: {fileID: 1793688281164265595}
+    probability: 1
+  obstacleVisuals:
+  - visual: {fileID: 405107448763571967}
+    probability: 84.7
+  - visual: {fileID: 7270083177640931173}
+    probability: 16.5
+  - visual: {fileID: 3415091655283625337}
+    probability: 18.3
+  - visual: {fileID: 5437740969918108652}
+    probability: 18.3
+  townUpgrade: {fileID: 0}
+  node: {fileID: 0}
+  collider: {fileID: 0}
 --- !u!65 &427619776915663761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -214,34 +370,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverHeight: 1.2
   returnSpeed: 2
---- !u!114 &3782136805208632122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3600933413957533853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 586385d833eb8d94b98795a4bf8eb820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GroundVisuals:
-  - visual: {fileID: 6239547291548973179}
-    probability: 83.4
-  - visual: {fileID: 1793688281164265595}
-    probability: 1
-  obstacleVisuals:
-  - visual: {fileID: 405107448763571967}
-    probability: 84.7
-  - visual: {fileID: 7270083177640931173}
-    probability: 16.5
-  - visual: {fileID: 3415091655283625337}
-    probability: 18.3
-  - visual: {fileID: 5437740969918108652}
-    probability: 18.3
-  node: {fileID: 0}
-  collider: {fileID: 0}
 --- !u!114 &7233526765659368976
 MonoBehaviour:
   m_ObjectHideFlags: 0
