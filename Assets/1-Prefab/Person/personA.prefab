@@ -124,6 +124,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _package:
   - {fileID: 43532913669390694, guid: 2a62d049f01f23941afdba15449ca3c2, type: 3}
+  - {fileID: 43532913669390694, guid: cecf871459ecdf54e98f00b630522485, type: 3}
+  - {fileID: 43532913669390694, guid: da25404280e22af4aa20ca12b2481ae3, type: 3}
+  - {fileID: 43532913669390694, guid: 83af8d515f04e9e4dab683030dfa87ab, type: 3}
+  - {fileID: 43532913669390694, guid: 4d86c08fe3f357e44981ba96afd9b545, type: 3}
 --- !u!65 &3061622243947931912
 BoxCollider:
   m_ObjectHideFlags: 0

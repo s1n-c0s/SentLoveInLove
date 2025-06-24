@@ -80,14 +80,14 @@ public class PackageMover : MonoBehaviour
             {
                 //Debug.Log($"Package reached its destination: {targetPerson.name}");
                 LeanPool.Despawn(gameObject);
-                if (targetPerson.CompareTag("PersonA"))
-                {
-                    PlayerDataManager.Instance.IncrementPackageReceivedB();
-                }
-                else
-                {
-                    PlayerDataManager.Instance.IncrementPackageReceivedA();
-                }
+                // if (targetPerson.CompareTag("PersonA"))
+                // {
+                //     PlayerDataManager.Instance.IncrementPackageReceivedB();
+                // }
+                // else
+                // {
+                //     PlayerDataManager.Instance.IncrementPackageReceivedA();
+                // }
                 ResetTrail(); // Reset trail upon reaching destination
             }
         }

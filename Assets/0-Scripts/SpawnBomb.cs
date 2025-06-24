@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class SpawnBomb : MonoBehaviour
 {
     [SerializeField] private GameObject bombPrefab;
-    [SerializeField] private float bombLifetime = 5f;
+    [SerializeField] private float minBombLifetime = 3f;
+    [SerializeField] private float maxBombLifetime = 8f;
     [SerializeField] private float initialSpawnDelay = 3f;
 
     private static int currentBombCount = 0;
@@ -74,13 +75,15 @@ public class SpawnBomb : MonoBehaviour
             currentBombCount++;
             activeBombPositions.Add(spawnPosition);
 
-            StartCoroutine(HandleBombLifetime(bomb));
+            // Generate random lifetime for this bomb
+            float randomLifetime = Random.Range(minBombLifetime, maxBombLifetime);
+            StartCoroutine(HandleBombLifetime(bomb, randomLifetime));
         }
     }
 
-    private IEnumerator HandleBombLifetime(GameObject bomb)
+    private IEnumerator HandleBombLifetime(GameObject bomb, float lifetime)
     {
-        yield return new WaitForSeconds(bombLifetime);
+        yield return new WaitForSeconds(lifetime);
 
         if (bomb != null && bomb.activeInHierarchy)
         {

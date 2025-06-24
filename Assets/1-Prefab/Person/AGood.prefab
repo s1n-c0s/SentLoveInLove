@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7721380916600690923}
   - component: {fileID: 8214711731599492994}
   m_Layer: 0
-  m_Name: AFlower
+  m_Name: AGood
   m_TagString: Package
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,8 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed54147f215ca14ca48d1a0e6bdae5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minSpeed: 5
-  _maxSpeed: 12
+  _minSpeed: 1
+  _maxSpeed: 15
   targetPerson: {fileID: 0}
   _trail: {fileID: 893628055145575269}
 --- !u!54 &1440170302218656118
@@ -6394,7 +6394,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
-    enabled: 1
+    enabled: 0
     mode: 0
     timeMode: 0
     fps: 30
@@ -9803,7 +9803,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a4bf052050cd4334f96403cbab49ba0f, type: 2}
+  - {fileID: 2100000, guid: 62f3715b9fb3de447a1d2ca62b3adff9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
