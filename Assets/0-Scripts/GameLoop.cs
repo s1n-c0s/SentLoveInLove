@@ -14,7 +14,6 @@ public class GameLoop : MonoBehaviour
     [SerializeField] private IHowToPlay howToPlay;
 
     [Header("State")]
-    private List<Person> placedPersons = new List<Person>();
     private List<BillboardSprite> billboardSprites = new List<BillboardSprite>();
     private float gameTime;
     public float GameTime => gameTime;
@@ -25,8 +24,6 @@ public class GameLoop : MonoBehaviour
     public CameraController CameraController { get; private set; }
 
     [Header("UI Feedback")]
-    [SerializeField] private ISpamKey spamKeyA;
-    [SerializeField] private ISpamKey spamKeyB;
     [SerializeField] private GameObject fxFirework;
 
     private void Awake()
@@ -53,8 +50,6 @@ public class GameLoop : MonoBehaviour
             }
         }
 
-        HandlePlacementInput();
-
         if (isGameRunning)
         {
             gameTime += Time.deltaTime;
@@ -62,35 +57,6 @@ public class GameLoop : MonoBehaviour
             {
                 EndGame();
             }
-        }
-    }
-
-    private void HandlePlacementInput()
-    {
-        // Find ISpamKey components for UI feedback
-        ISpamKey[] spamKeys = FindObjectsOfType<ISpamKey>();
-        foreach (var key in spamKeys)
-        {
-            if (key.IsPersonA())
-                spamKeyA = key;
-            else
-                spamKeyB = key;
-        }
-
-        if (!placeMe.PlacementComplete || placedPersons == null) return;
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            PlayerDataManager.Instance.IncrementButtonPressA();
-            SpawnPackagesForPerson(0); // First person (Person A)
-            spamKeyA?.OnKeyPress(); // UI feedback
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            PlayerDataManager.Instance.IncrementButtonPressB();
-            SpawnPackagesForPerson(1); // Second person (Person B)
-            spamKeyB?.OnKeyPress(); // UI feedback
         }
     }
 
@@ -185,27 +151,12 @@ public class GameLoop : MonoBehaviour
         }
     }
 
-
     private void EnableBillboardSprites()
     {
         foreach (var billboardSprite in billboardSprites)
         {
             billboardSprite.enabled = true;
         }
-    }
-
-    private void SpawnPackagesForPerson(int personIndex)
-    {
-        placedPersons = placeMe.GetPlacedPersons();
-        if (personIndex >= placedPersons.Count)
-        {
-            Debug.LogWarning($"Person at index {personIndex} not found!");
-            return;
-        }
-
-        Person person = placedPersons[personIndex];
-        Debug.Log($"Spawning packages around {person.name}...");
-        person.SpawnPackageAroundSelf();
     }
 
     public void SwitchToEndCamera()

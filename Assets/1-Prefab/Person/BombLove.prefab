@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73d3ad10b76f0044aab339fccb93119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  captureRadius: 10
+  captureRadius: 20
   tileLayer:
     serializedVersion: 2
     m_Bits: 64
