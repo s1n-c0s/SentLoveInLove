@@ -136,12 +136,12 @@ public class PlayerDataManager : MonoBehaviour
 
     public void UpdateSelectCharacterA(int val) => playerData?.UpdateSelectCharacterA(val);
     public void UpdateSelectCharacterB(int val) => playerData?.UpdateSelectCharacterB(val);
-    public void IncrementButtonPressA() { playerData?.IncrementButtonPressA(); CheckAndUpdateFX(); }
-    public void IncrementButtonPressB() { playerData?.IncrementButtonPressB(); CheckAndUpdateFX(); }
+    public void IncrementButtonPressA() { playerData?.IncrementButtonPressA(); }
+    public void IncrementButtonPressB() { playerData?.IncrementButtonPressB(); }
 
-    public void IncrementTileA() { playerData?.IncrementTileA(); CheckAndUpdateFX(); }
-    public void IncrementTileB() { playerData?.IncrementTileB(); CheckAndUpdateFX(); }
-    public void DecrementTileA() => playerData?.DecrementTileA();
+    public void IncrementTileA() { playerData?.IncrementTileA(); }
+    public void IncrementTileB() { playerData?.IncrementTileB(); }
+    public void DecrementTileA() { playerData?.DecrementTileA(); CheckAndUpdateFX(); }
     public void DecrementTileB() => playerData?.DecrementTileB();
 
     public void IncrementBuildingCountA() { playerData?.IncrementBuildingCountA(); CheckAndUpdateFX(); }
