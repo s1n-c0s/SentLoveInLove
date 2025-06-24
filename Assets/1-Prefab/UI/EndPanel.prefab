@@ -386,7 +386,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.1
+  m_fontSize: 72
   m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -482,7 +482,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPersonA: 1
   ButtonIndexText: {fileID: 7358424290518455794}
-  PackagesIndexText: {fileID: 550172183567885644}
+  BuildingCountText: {fileID: 550172183567885644}
   TileIndexText: {fileID: 2272529726041689802}
 --- !u!114 &3877712730869856187
 MonoBehaviour:
@@ -2487,7 +2487,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.1
+  m_fontSize: 72
   m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2583,7 +2583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPersonA: 0
   ButtonIndexText: {fileID: 7163715412779854370}
-  PackagesIndexText: {fileID: 3072697829980593789}
+  BuildingCountText: {fileID: 3072697829980593789}
   TileIndexText: {fileID: 7233141128037997380}
 --- !u!114 &6462064850381162662
 MonoBehaviour:
@@ -2676,7 +2676,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Gifts Received
+  m_text: Tower
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
   m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,
@@ -3411,7 +3411,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Gifts Received
+  m_text: Tower
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
   m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,

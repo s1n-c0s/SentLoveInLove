@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -9,109 +7,74 @@ public class PlayerData
     [SerializeField] private int _TileA;
     [SerializeField] private int _selectCharacterA;
     [SerializeField] private int _buttonPressA;
-    [SerializeField] private int _PackageReceivedA;
+    [SerializeField] private int _BuildingCountA;
 
     [SerializeField] private string _playerNameB;
     [SerializeField] private int _TileB;
     [SerializeField] private int _selectCharacterB;
     [SerializeField] private int _buttonPressB;
-    [SerializeField] private int _PackageReceivedB;
+    [SerializeField] private int _BuildingCountB;
 
-    public PlayerData(string playerNameA, int tileA, int selectCharacterA, int buttonPressA, int packageReceivedA, string playerNameB, int tileB, int selectCharacterB, int buttonPressB, int packageReceivedB)
+    public PlayerData(string playerNameA, int tileA, int selectCharacterA, int buttonPressA, int buildingCountA,
+                      string playerNameB, int tileB, int selectCharacterB, int buttonPressB, int buildingCountB)
     {
-        this._playerNameA = playerNameA;
-        this._TileA = tileA;
-        this._selectCharacterA = selectCharacterA;
-        this._buttonPressA = buttonPressA;
-        this._PackageReceivedA = packageReceivedA;
-
-        this._playerNameB = playerNameB;
-        this._TileB = tileB;
-        this._selectCharacterB = selectCharacterB;
-        this._buttonPressB = buttonPressB;
-        this._PackageReceivedB = packageReceivedB;
-    }
-
-    public string PlayerNameA { get { return _playerNameA; } }
-    public int TileA { get { return _TileA; } }
-    public int SelectCharacterA { get { return _selectCharacterA; } }
-    public int ButtonPressA { get { return _buttonPressA; } }
-    public int PackageReceivedA { get { return _PackageReceivedA; } }
-
-    public string PlayerNameB { get { return _playerNameB; } }
-    public int TileB { get { return _TileB; } }
-    public int SelectCharacterB { get { return _selectCharacterB; } }
-    public int ButtonPressB { get { return _buttonPressB; } }
-    public int PackageReceivedB { get { return _PackageReceivedB; } }
-
-    public void UpdateSelectCharacterA(int selectCharacterA)
-    {
+        _playerNameA = playerNameA;
+        _TileA = tileA;
         _selectCharacterA = selectCharacterA;
-    }
+        _buttonPressA = buttonPressA;
+        _BuildingCountA = buildingCountA;
 
-    public void UpdateSelectCharacterB(int selectCharacterB)
-    {
+        _playerNameB = playerNameB;
+        _TileB = tileB;
         _selectCharacterB = selectCharacterB;
+        _buttonPressB = buttonPressB;
+        _BuildingCountB = buildingCountB;
     }
 
-    public void IncrementButtonPressA()
-    {
-        _buttonPressA++;
-    }
+    public string PlayerNameA => _playerNameA;
+    public int TileA => _TileA;
+    public int SelectCharacterA => _selectCharacterA;
+    public int ButtonPressA => _buttonPressA;
+    public int BuildingCountA => _BuildingCountA;
 
-    public void IncrementButtonPressB()
-    {
-        _buttonPressB++;
-    }
+    public string PlayerNameB => _playerNameB;
+    public int TileB => _TileB;
+    public int SelectCharacterB => _selectCharacterB;
+    public int ButtonPressB => _buttonPressB;
+    public int BuildingCountB => _BuildingCountB;
 
-    public void IncrementPackageReceivedA()
-    {
-        _PackageReceivedA++;
-    }
+    public void UpdateSelectCharacterA(int val) => _selectCharacterA = val;
+    public void UpdateSelectCharacterB(int val) => _selectCharacterB = val;
+    public void IncrementButtonPressA() => _buttonPressA++;
+    public void IncrementButtonPressB() => _buttonPressB++;
 
-    public void IncrementPackageReceivedB()
-    {
-        _PackageReceivedB++;
-    }
+    public void IncrementTileA() => _TileA++;
+    public void DecrementTileA() { if (_TileA > 0) _TileA--; }
 
-    public void IncrementTileA()
-    {
-        _TileA++;
-    }
+    public void IncrementTileB() => _TileB++;
+    public void DecrementTileB() { if (_TileB > 0) _TileB--; }
 
-    public void IncrementTileB()
-    {
-        _TileB++;
-    }
+    public void IncrementBuildingCountA() => _BuildingCountA++;
+    public void DecrementBuildingCountA() { if (_BuildingCountA > 0) _BuildingCountA--; }
 
-    public void DecrementTileA()
-    {
-        if (_TileA > 0)
-        {
-            _TileA--;
-        }
-    }
-
-    public void DecrementTileB()
-    {
-        if (_TileB > 0)
-        {
-            _TileB--;
-        }
-    }
+    public void IncrementBuildingCountB() => _BuildingCountB++;
+    public void DecrementBuildingCountB() { if (_BuildingCountB > 0) _BuildingCountB--; }
 }
 
 public class PlayerDataManager : MonoBehaviour
 {
-    public static PlayerDataManager Instance;
+    public static PlayerDataManager Instance { get; private set; }
 
     public PlayerData playerData;
+
+    private int lastWinner = -1;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            // Optional: Uncomment if you want this object to persist
             // DontDestroyOnLoad(gameObject);
         }
         else
@@ -120,149 +83,69 @@ public class PlayerDataManager : MonoBehaviour
         }
     }
 
+    public void SavePlayerData(string playerNameA, int tileA, int selectCharacterA, int buttonPressA, int buildingCountA,
+                               string playerNameB, int tileB, int selectCharacterB, int buttonPressB, int buildingCountB)
+    {
+        playerData = new PlayerData(playerNameA, tileA, selectCharacterA, buttonPressA, buildingCountA,
+                                    playerNameB, tileB, selectCharacterB, buttonPressB, buildingCountB);
+    }
 
     public int GetWinner()
     {
-        int aScore = playerData.ButtonPressA + playerData.TileA;
-        int bScore = playerData.ButtonPressB + playerData.TileB;
+        int aScore = playerData.TileA + playerData.ButtonPressA;
+        int bScore = playerData.TileB + playerData.ButtonPressB;
 
-        return aScore > bScore ? 0 : bScore > aScore ? 1 : -1;
+        return aScore > bScore ? 0 : (bScore > aScore ? 1 : -1); // 0 = A wins, 1 = B wins, -1 = tie
     }
-
-    private int lastWinner = -1; // -1 means no previous winner
 
     public void CheckAndUpdateFX()
     {
-        EndFXPlayer[] endFXPlayers = FindObjectsOfType<EndFXPlayer>();
+        EndFXPlayer[] fxPlayers = FindObjectsOfType<EndFXPlayer>();
 
-        int aScore = playerData.ButtonPressA + playerData.TileA;
-        int bScore = playerData.ButtonPressB + playerData.TileB;
+        int aScore = playerData.TileA + playerData.ButtonPressA;
+        int bScore = playerData.TileB + playerData.ButtonPressB;
 
-        int currentWinner = (aScore > bScore) ? 0 : (bScore > aScore) ? 1 : -1; // 0 = A, 1 = B, -1 = Tie
+        int currentWinner = aScore > bScore ? 0 : (bScore > aScore ? 1 : -1);
 
-        if (currentWinner == lastWinner) return; // No need to update if nothing changed
+        if (currentWinner == lastWinner) return;
 
-        foreach (var fxPlayer in endFXPlayers)
+        foreach (var fx in fxPlayers)
         {
-            fxPlayer.PlayAreaFX(); // Keep AreaFX always active
+            fx.PlayAreaFX();
 
-            if (currentWinner == -1) // If tied, both players get CrownFX
+            if (currentWinner == -1)
             {
-                fxPlayer.PlayCrownFX();
+                fx.PlayCrownFX();
             }
-            else if (currentWinner == 0) // Player A leads
+            else if (currentWinner == 0 && fx.CompareTag("PersonA"))
             {
-                if (fxPlayer.CompareTag("PersonA"))
-                    fxPlayer.PlayCrownFX();
-                else
-                    fxPlayer.DisableCrownFX(); // Ensure PersonB’s FX is turned off
+                fx.PlayCrownFX();
             }
-            else if (currentWinner == 1) // Player B leads
+            else if (currentWinner == 1 && fx.CompareTag("PersonB"))
             {
-                if (fxPlayer.CompareTag("PersonB"))
-                    fxPlayer.PlayCrownFX();
-                else
-                    fxPlayer.DisableCrownFX(); // Ensure PersonA’s FX is turned off
+                fx.PlayCrownFX();
+            }
+            else
+            {
+                fx.DisableCrownFX();
             }
         }
 
-        lastWinner = currentWinner; // Update last winner to avoid redundant updates
+        lastWinner = currentWinner;
     }
 
+    public void UpdateSelectCharacterA(int val) => playerData?.UpdateSelectCharacterA(val);
+    public void UpdateSelectCharacterB(int val) => playerData?.UpdateSelectCharacterB(val);
+    public void IncrementButtonPressA() { playerData?.IncrementButtonPressA(); CheckAndUpdateFX(); }
+    public void IncrementButtonPressB() { playerData?.IncrementButtonPressB(); CheckAndUpdateFX(); }
 
-    public void SavePlayerData(string playerNameA, int tileA, int selectCharacterA, int buttonPressA, int packageReceivedA, string playerNameB, int tileB, int selectCharacterB, int buttonPressB, int packageReceivedB)
-    {
-        playerData = new PlayerData(playerNameA, tileA, selectCharacterA, buttonPressA, packageReceivedA, playerNameB, tileB, selectCharacterB, buttonPressB, packageReceivedB);
-        // Implement save logic here (e.g., PlayerPrefs, file, etc.)
-    }
+    public void IncrementTileA() { playerData?.IncrementTileA(); CheckAndUpdateFX(); }
+    public void IncrementTileB() { playerData?.IncrementTileB(); CheckAndUpdateFX(); }
+    public void DecrementTileA() => playerData?.DecrementTileA();
+    public void DecrementTileB() => playerData?.DecrementTileB();
 
-    public void LoadPlayerData()
-    {
-        // Implement load logic here (e.g., PlayerPrefs, file, etc.)
-        // Example:
-        // playerData = new PlayerData(loadedNameA, loadedTileA, loadedCharacterA, loadedButtonPressA, loadedPackageReceivedA, loadedNameB, loadedTileB, loadedCharacterB, loadedButtonPressB, loadedPackageReceivedB);
-    }
-
-    public void UpdateSelectCharacterA(int selectCharacterA)
-    {
-        if (playerData != null)
-        {
-            playerData.UpdateSelectCharacterA(selectCharacterA);
-        }
-    }
-
-    public void UpdateSelectCharacterB(int selectCharacterB)
-    {
-        if (playerData != null)
-        {
-            playerData.UpdateSelectCharacterB(selectCharacterB);
-        }
-    }
-
-    public void IncrementButtonPressA()
-    {
-        if (playerData != null)
-        {
-            playerData.IncrementButtonPressA();
-        }
-    }
-
-    public void IncrementButtonPressB()
-    {
-        if (playerData != null)
-        {
-            playerData.IncrementButtonPressB();
-        }
-    }
-
-    public void IncrementPackageReceivedA()
-    {
-        if (playerData != null)
-        {
-            playerData.IncrementPackageReceivedA();
-            CheckAndUpdateFX(); // Update FX when score changes
-        }
-    }
-
-    public void IncrementPackageReceivedB()
-    {
-        if (playerData != null)
-        {
-            playerData.IncrementPackageReceivedB();
-            CheckAndUpdateFX(); // Update FX when score changes
-        }
-    }
-
-
-    public void IncrementTileA()
-    {
-        if (playerData != null)
-        {
-            playerData.IncrementTileA();
-        }
-    }
-
-    public void IncrementTileB()
-    {
-        if (playerData != null)
-        {
-            playerData.IncrementTileB();
-        }
-    }
-
-    public void DecrementTileA()
-    {
-        if (playerData != null)
-        {
-            playerData.DecrementTileA();
-        }
-    }
-
-    public void DecrementTileB()
-    {
-        if (playerData != null)
-        {
-            playerData.DecrementTileB();
-        }
-    }
+    public void IncrementBuildingCountA() { playerData?.IncrementBuildingCountA(); CheckAndUpdateFX(); }
+    public void IncrementBuildingCountB() { playerData?.IncrementBuildingCountB(); CheckAndUpdateFX(); }
+    public void DecrementBuildingCountA() => playerData?.DecrementBuildingCountA();
+    public void DecrementBuildingCountB() => playerData?.DecrementBuildingCountB();
 }
