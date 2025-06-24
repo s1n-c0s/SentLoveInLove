@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class TownUpgrade : MonoBehaviour
@@ -18,7 +19,7 @@ public class TownUpgrade : MonoBehaviour
     {
         if (other.CompareTag("Package") && canUpgrade)
         {
-            if (currentUpgradeLevel > 3)
+            if (currentUpgradeLevel > upgradeVisuals.Length - 2)
             {
                 canUpgrade = false;
             }
