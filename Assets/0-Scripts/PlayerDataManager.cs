@@ -66,6 +66,7 @@ public class PlayerDataManager : MonoBehaviour
     public static PlayerDataManager Instance { get; private set; }
 
     public PlayerData playerData;
+    [SerializeField] private bool firstCheck = false;
 
     private int lastWinner = -1;
 
@@ -80,6 +81,14 @@ public class PlayerDataManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (firstCheck == true)
+        {
+            CheckAndUpdateFX();
         }
     }
 
@@ -102,8 +111,8 @@ public class PlayerDataManager : MonoBehaviour
     {
         EndFXPlayer[] fxPlayers = FindObjectsOfType<EndFXPlayer>();
 
-        int aScore = playerData.TileA + playerData.ButtonPressA;
-        int bScore = playerData.TileB + playerData.ButtonPressB;
+        int aScore = playerData.TileA + playerData.ButtonPressA + playerData.BuildingCountA * 3;
+        int bScore = playerData.TileB + playerData.ButtonPressB + playerData.BuildingCountB * 3;
 
         int currentWinner = aScore > bScore ? 0 : (bScore > aScore ? 1 : -1);
 
@@ -141,11 +150,18 @@ public class PlayerDataManager : MonoBehaviour
 
     public void IncrementTileA() { playerData?.IncrementTileA(); }
     public void IncrementTileB() { playerData?.IncrementTileB(); }
-    public void DecrementTileA() { playerData?.DecrementTileA(); CheckAndUpdateFX(); }
+    public void DecrementTileA()
+    {
+        playerData?.DecrementTileA(); if (firstCheck == false)
+        {
+            firstCheck = true;
+            CheckAndUpdateFX();
+        }
+    }
     public void DecrementTileB() => playerData?.DecrementTileB();
 
-    public void IncrementBuildingCountA() { playerData?.IncrementBuildingCountA(); CheckAndUpdateFX(); }
-    public void IncrementBuildingCountB() { playerData?.IncrementBuildingCountB(); CheckAndUpdateFX(); }
+    public void IncrementBuildingCountA() { playerData?.IncrementBuildingCountA(); }
+    public void IncrementBuildingCountB() { playerData?.IncrementBuildingCountB(); }
     public void DecrementBuildingCountA() => playerData?.DecrementBuildingCountA();
     public void DecrementBuildingCountB() => playerData?.DecrementBuildingCountB();
 }
