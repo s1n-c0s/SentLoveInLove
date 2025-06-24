@@ -13,6 +13,7 @@ public class LandCheck : MonoBehaviour
 {
     [SerializeField] private List<VisualProbability> GroundVisuals;
     [SerializeField] private List<VisualProbability> obstacleVisuals;
+    [SerializeField] private TownUpgrade townUpgrade;
     [SerializeField] private Node node;
     [SerializeField] private new BoxCollider collider;
 
@@ -20,6 +21,7 @@ public class LandCheck : MonoBehaviour
     {
         node = GetComponent<Node>();
         collider = GetComponent<BoxCollider>();
+        townUpgrade = GetComponent<TownUpgrade>();
 
         ShowGround();
         if (!node.isWalkable)
@@ -44,6 +46,7 @@ public class LandCheck : MonoBehaviour
         GameObject selectedVisual = SelectVisual(obstacleVisuals);
         if (selectedVisual != null)
         {
+            // Water Tile
             if (selectedVisual == obstacleVisuals[0].visual)
             {
                 HideAllGround();
@@ -54,6 +57,24 @@ public class LandCheck : MonoBehaviour
             }
             selectedVisual.SetActive(true);
             transform.eulerAngles = Vector3.up * Random.Range(0, 4) * 90;
+
+            // Grass Tile
+            if (selectedVisual == obstacleVisuals[2].visual)
+            {
+                townUpgrade.canUpgrade = true;
+                townUpgrade.currentUpgradeLevel = 2;
+            }
+            // House Tile
+            else if (selectedVisual == obstacleVisuals[3].visual)
+            {
+                townUpgrade.canUpgrade = true;
+                townUpgrade.currentUpgradeLevel = 3;
+            }
+            // // Town
+            // else if (selectedVisual == obstacleVisuals[4].visual)
+            // {
+            //     townUpgrade.currentUpgradeLevel = 4;
+            // }
         }
     }
 
@@ -87,7 +108,7 @@ public class LandCheck : MonoBehaviour
         // Fallback (should rarely happen due to floating point precision)
         return validVisuals[validVisuals.Count - 1].visual;
     }
-    
+
     private void HideAllGround()
     {
         foreach (var visual in GroundVisuals)
