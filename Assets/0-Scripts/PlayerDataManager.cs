@@ -111,8 +111,8 @@ public class PlayerDataManager : MonoBehaviour
     {
         EndFXPlayer[] fxPlayers = FindObjectsOfType<EndFXPlayer>();
 
-        int aScore = playerData.TileA + playerData.ButtonPressA + playerData.BuildingCountA * 3;
-        int bScore = playerData.TileB + playerData.ButtonPressB + playerData.BuildingCountB * 3;
+        int aScore = playerData.TileA + playerData.ButtonPressA + playerData.BuildingCountA * 5;
+        int bScore = playerData.TileB + playerData.ButtonPressB + playerData.BuildingCountB * 5;
 
         int currentWinner = aScore > bScore ? 0 : (bScore > aScore ? 1 : -1);
 
