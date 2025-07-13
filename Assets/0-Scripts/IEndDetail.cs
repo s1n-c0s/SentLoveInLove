@@ -16,7 +16,7 @@ public class IEndDetail : MonoBehaviour
     public TextMeshProUGUI TileIndexText;
 
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (isPersonA)
         {
