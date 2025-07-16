@@ -78,10 +78,4 @@ public class IKeyDisplay : MonoBehaviour
             default: return key.ToString();
         }
     }
-
-    // Method to manually refresh the display
-    public void RefreshDisplay()
-    {
-        UpdateKeyDisplay();
-    }
 }
