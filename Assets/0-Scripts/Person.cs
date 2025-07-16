@@ -45,6 +45,30 @@ public class Person : MonoBehaviour
 
         gameObject.SetActive(true);
     }
+    
+    public void rotateLookatTogether()
+    {
+        GameObject otherPerson = null;
+        if (isPersonA)
+        {
+            otherPerson = GameObject.FindGameObjectWithTag("PersonB");
+        }
+        else
+        {
+            otherPerson = GameObject.FindGameObjectWithTag("PersonA");
+        }
+
+        if (otherPerson != null)
+        {
+            Vector3 centerPoint = (transform.position + otherPerson.transform.position) / 2f;
+            SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+            Debug.Log(sr== null ? "SpriteRenderer is null" : "SpriteRenderer found");
+            if (sr != null)
+            {
+                sr.flipX = transform.position.x > centerPoint.x;
+            }
+        }
+    }
 
     public void Initialize(Node assignedNode)
     {

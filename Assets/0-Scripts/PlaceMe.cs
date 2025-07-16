@@ -6,24 +6,32 @@ public class PlaceMe : MonoBehaviour
 {
     [SerializeField] private GameObject _prefabA;
     [SerializeField] private GameObject _prefabB;
-
     public bool CanPlace { get; set; }
     public bool PlacementComplete => placedCount >= MaxPlacedCount;
-
     private bool isNextPrefabA = true;
     private int placedCount = 0;
     private const int MaxPlacedCount = 2;
     private HashSet<Node> occupiedNodes = new HashSet<Node>();
     private List<Person> placedPersons = new List<Person>();
-
+    private bool hasRotatedAfterPlacement = false; // Flag to track if rotation was already applied
+    
     private void Update()
     {
         if (CanPlace)
         {
             SelectLocation();
         }
+        else if (PlacementComplete && !hasRotatedAfterPlacement)
+        {
+            // Only rotate once when placement is complete
+            foreach (Person person in placedPersons)
+            {
+                person.rotateLookatTogether();
+            }
+            hasRotatedAfterPlacement = true;
+        }
     }
-
+    
     private void SelectLocation()
     {
         if (PlacementComplete)
