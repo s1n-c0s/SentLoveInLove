@@ -1,10 +1,12 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using PrimeTween;
 
 public class KeyDisplayManager : MonoBehaviour
 {
     private Dictionary<int, TextMeshProUGUI> playerKeyTexts = new Dictionary<int, TextMeshProUGUI>();
+    private Dictionary<int, string> lastKeyTexts = new Dictionary<int, string>();
     private KeyHandler keyHandler;
     private bool isGamePlaying = true;
    
@@ -58,6 +60,7 @@ public class KeyDisplayManager : MonoBehaviour
         if (keyText != null)
         {
             playerKeyTexts[playerIndex] = keyText;
+            lastKeyTexts[playerIndex] = "";
             Debug.Log($"KeyDisplayManager: Registered Player {playerIndex} key text: {keyText.name}");
             
             // Set initial state based on current game state
@@ -75,6 +78,7 @@ public class KeyDisplayManager : MonoBehaviour
         if (playerKeyTexts.ContainsKey(playerIndex))
         {
             playerKeyTexts.Remove(playerIndex);
+            lastKeyTexts.Remove(playerIndex);
             Debug.Log($"KeyDisplayManager: Unregistered Player {playerIndex} key text");
         }
     }
@@ -91,9 +95,39 @@ public class KeyDisplayManager : MonoBehaviour
             if (keyText != null && keyText.gameObject.activeInHierarchy)
             {
                 KeyCode playerKey = GetPlayerKey(playerIndex);
-                keyText.text = "Press: " + GetKeyDisplayName(playerKey);
+                string newKeyText = "Press: " + GetKeyDisplayName(playerKey);
+                
+                // Check if the key has changed
+                if (lastKeyTexts.ContainsKey(playerIndex) && lastKeyTexts[playerIndex] != newKeyText)
+                {
+                    // Update the text
+                    keyText.text = newKeyText;
+                    lastKeyTexts[playerIndex] = newKeyText;
+                    
+                    // Play bounce animation
+                    PlayBounceAnimation(keyText);
+                }
+                else if (!lastKeyTexts.ContainsKey(playerIndex))
+                {
+                    // First time setting the text
+                    keyText.text = newKeyText;
+                    lastKeyTexts[playerIndex] = newKeyText;
+                    PlayBounceAnimation(keyText);
+                }
             }
         }
+    }
+    
+    private void PlayBounceAnimation(TextMeshProUGUI keyText)
+    {
+        // Stop any existing animation on this object
+        Tween.StopAll(keyText.transform);
+        
+        // Bounce animation using Prime Tween
+        Tween.Scale(keyText.transform, Vector3.one * 1.2f, 0.1f, Ease.OutQuad)
+            .OnComplete(() => {
+                Tween.Scale(keyText.transform, Vector3.one, 0.1f, Ease.InQuad);
+            });
     }
    
     private KeyCode GetPlayerKey(int playerIndex)
@@ -131,7 +165,15 @@ public class KeyDisplayManager : MonoBehaviour
         if (keyText != null && keyText.gameObject.activeInHierarchy)
         {
             KeyCode playerKey = GetPlayerKey(playerIndex);
-            keyText.text = "Press: " + GetKeyDisplayName(playerKey);
+            string newKeyText = "Press: " + GetKeyDisplayName(playerKey);
+            
+            // Check if the key has changed
+            if (lastKeyTexts.ContainsKey(playerIndex) && lastKeyTexts[playerIndex] != newKeyText)
+            {
+                keyText.text = newKeyText;
+                lastKeyTexts[playerIndex] = newKeyText;
+                PlayBounceAnimation(keyText);
+            }
         }
     }
 }
