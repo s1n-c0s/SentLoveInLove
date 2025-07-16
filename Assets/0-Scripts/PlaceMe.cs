@@ -1,6 +1,3 @@
-// Alternative approach: Store references directly in PlaceMe and update them there
-// Modified PlaceMe.cs
-
 using UnityEngine;
 using Lean.Pool;
 using System.Collections.Generic;
@@ -21,17 +18,15 @@ public class PlaceMe : MonoBehaviour
     private List<Person> placedPersons = new List<Person>();
     private bool hasRotatedAfterPlacement = false;
     
-    // Store the text components directly
-    private TextMeshProUGUI playerAKeyText;
-    private TextMeshProUGUI playerBKeyText;
-    private KeyHandler keyHandler;
+    // Reference to the key display manager
+    private KeyDisplayManager keyDisplayManager;
     
     private void Awake()
     {
-        keyHandler = FindObjectOfType<KeyHandler>();
-        if (keyHandler == null)
+        keyDisplayManager = FindObjectOfType<KeyDisplayManager>();
+        if (keyDisplayManager == null)
         {
-            Debug.LogError("PlaceMe: Could not find KeyHandler!");
+            Debug.LogError("PlaceMe: Could not find KeyDisplayManager!");
         }
     }
     
@@ -48,42 +43,6 @@ public class PlaceMe : MonoBehaviour
                 person.rotateLookatTogether();
             }
             hasRotatedAfterPlacement = true;
-        }
-        
-        // Update key displays directly here
-        UpdateKeyDisplays();
-    }
-    
-    private void UpdateKeyDisplays()
-    {
-        if (keyHandler == null) return;
-        
-        if (playerAKeyText != null)
-        {
-            KeyCode playerAKey = keyHandler.GetPlayerATargetKey();
-            playerAKeyText.text = "Press: " + GetKeyDisplayName(playerAKey);
-        }
-        
-        if (playerBKeyText != null)
-        {
-            KeyCode playerBKey = keyHandler.GetPlayerBTargetKey();
-            playerBKeyText.text = "Press: " + GetKeyDisplayName(playerBKey);
-        }
-    }
-    
-    private string GetKeyDisplayName(KeyCode key)
-    {
-        switch (key)
-        {
-            case KeyCode.UpArrow: return "↑";
-            case KeyCode.DownArrow: return "↓";
-            case KeyCode.LeftArrow: return "←";
-            case KeyCode.RightArrow: return "→";
-            case KeyCode.W: return "W";
-            case KeyCode.A: return "A";
-            case KeyCode.S: return "S";
-            case KeyCode.D: return "D";
-            default: return key.ToString();
         }
     }
     
@@ -115,8 +74,8 @@ public class PlaceMe : MonoBehaviour
         
         Debug.Log($"{prefabToSpawn.name} placed at {centerPosition}");
         
-        // Store the text component reference
-        StoreTextReference(spawnedObject, isNextPrefabA);
+        // Register the text component with the key display manager
+        RegisterWithKeyDisplayManager(spawnedObject, isNextPrefabA);
         
         isNextPrefabA = !isNextPrefabA;
         placedCount++;
@@ -130,21 +89,16 @@ public class PlaceMe : MonoBehaviour
         }
     }
     
-    private void StoreTextReference(GameObject spawnedObject, bool isPlayerA)
+    private void RegisterWithKeyDisplayManager(GameObject spawnedObject, bool isPlayerA)
     {
+        if (keyDisplayManager == null) return;
+        
         TextMeshProUGUI textComponent = spawnedObject.GetComponentInChildren<TextMeshProUGUI>();
         if (textComponent != null)
         {
-            if (isPlayerA)
-            {
-                playerAKeyText = textComponent;
-                Debug.Log($"PlaceMe: Stored PlayerA key text reference to {textComponent.name}");
-            }
-            else
-            {
-                playerBKeyText = textComponent;
-                Debug.Log($"PlaceMe: Stored PlayerB key text reference to {textComponent.name}");
-            }
+            int playerIndex = isPlayerA ? 0 : 1;
+            keyDisplayManager.RegisterPlayerKeyText(playerIndex, textComponent);
+            Debug.Log($"PlaceMe: Registered Player {playerIndex} text with KeyDisplayManager");
         }
         else
         {
