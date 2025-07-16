@@ -6,7 +6,8 @@ public class KeyDisplayManager : MonoBehaviour
 {
     private Dictionary<int, TextMeshProUGUI> playerKeyTexts = new Dictionary<int, TextMeshProUGUI>();
     private KeyHandler keyHandler;
-    
+    private bool isGamePlaying = true;
+   
     private void Awake()
     {
         keyHandler = FindObjectOfType<KeyHandler>();
@@ -15,21 +16,60 @@ public class KeyDisplayManager : MonoBehaviour
             Debug.LogError("KeyDisplayManager: Could not find KeyHandler!");
         }
     }
-    
+
+    private void Start()
+    {
+        // Subscribe to game state changes
+        GameManager.GameStateChanged += OnGameStateChanged;
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe from game state changes
+        GameManager.GameStateChanged -= OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged(GameManager.GameState newState)
+    {
+        // Disable key displays when game ends or is paused, enable for other states
+        isGamePlaying = newState != GameManager.GameState.EndGame && newState != GameManager.GameState.Paused;
+        
+        // Hide or show all key displays based on game state
+        foreach (var kvp in playerKeyTexts)
+        {
+            if (kvp.Value != null)
+            {
+                kvp.Value.gameObject.SetActive(isGamePlaying);
+            }
+        }
+    }
+   
     private void Update()
     {
-        UpdateAllKeyDisplays();
+        // Only update displays if game is active
+        if (isGamePlaying)
+        {
+            UpdateAllKeyDisplays();
+        }
     }
-    
+   
     public void RegisterPlayerKeyText(int playerIndex, TextMeshProUGUI keyText)
     {
         if (keyText != null)
         {
             playerKeyTexts[playerIndex] = keyText;
             Debug.Log($"KeyDisplayManager: Registered Player {playerIndex} key text: {keyText.name}");
+            
+            // Set initial state based on current game state
+            if (GameManager.Instance != null)
+            {
+                var currentState = GameManager.Instance.GetCurrentState();
+                isGamePlaying = currentState != GameManager.GameState.EndGame && currentState != GameManager.GameState.Paused;
+                keyText.gameObject.SetActive(isGamePlaying);
+            }
         }
     }
-    
+   
     public void UnregisterPlayerKeyText(int playerIndex)
     {
         if (playerKeyTexts.ContainsKey(playerIndex))
@@ -38,24 +78,24 @@ public class KeyDisplayManager : MonoBehaviour
             Debug.Log($"KeyDisplayManager: Unregistered Player {playerIndex} key text");
         }
     }
-    
+   
     private void UpdateAllKeyDisplays()
     {
         if (keyHandler == null) return;
-        
+       
         foreach (var kvp in playerKeyTexts)
         {
             int playerIndex = kvp.Key;
             TextMeshProUGUI keyText = kvp.Value;
-            
-            if (keyText != null)
+           
+            if (keyText != null && keyText.gameObject.activeInHierarchy)
             {
                 KeyCode playerKey = GetPlayerKey(playerIndex);
                 keyText.text = "Press: " + GetKeyDisplayName(playerKey);
             }
         }
     }
-    
+   
     private KeyCode GetPlayerKey(int playerIndex)
     {
         switch (playerIndex)
@@ -65,7 +105,7 @@ public class KeyDisplayManager : MonoBehaviour
             default: return KeyCode.None;
         }
     }
-    
+   
     private string GetKeyDisplayName(KeyCode key)
     {
         switch (key)
@@ -81,14 +121,14 @@ public class KeyDisplayManager : MonoBehaviour
             default: return key.ToString();
         }
     }
-    
+   
     // Alternative: Update specific player's display only
     public void UpdatePlayerKeyDisplay(int playerIndex)
     {
         if (keyHandler == null || !playerKeyTexts.ContainsKey(playerIndex)) return;
-        
+       
         TextMeshProUGUI keyText = playerKeyTexts[playerIndex];
-        if (keyText != null)
+        if (keyText != null && keyText.gameObject.activeInHierarchy)
         {
             KeyCode playerKey = GetPlayerKey(playerIndex);
             keyText.text = "Press: " + GetKeyDisplayName(playerKey);
