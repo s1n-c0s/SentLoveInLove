@@ -822,8 +822,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Check-in \n#LoveWithQuantum\n\nConcept Idea by Sikarin Y. & IF Staff\nDeveloped
-    by Thanakrit Ph."
+  m_text: 'Capture The Moment
+
+    #LoveWithQuantum
+
+
+    Concept Idea by Sikarin
+    Y. & IF Staff
+
+    Developed by Thanakrit Ph.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 592500df10115de4f8c3d0614f7f73a0, type: 2}
   m_sharedMaterial: {fileID: -6966970229722640902, guid: 592500df10115de4f8c3d0614f7f73a0,
