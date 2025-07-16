@@ -110,10 +110,10 @@ public class KeyDisplayManager : MonoBehaviour
     {
         switch (key)
         {
-            case KeyCode.UpArrow: return "↑";
-            case KeyCode.DownArrow: return "↓";
-            case KeyCode.LeftArrow: return "←";
-            case KeyCode.RightArrow: return "→";
+            case KeyCode.UpArrow: return "Up";
+            case KeyCode.DownArrow: return "Down";
+            case KeyCode.LeftArrow: return "Left";
+            case KeyCode.RightArrow: return "Right";
             case KeyCode.W: return "W";
             case KeyCode.A: return "A";
             case KeyCode.S: return "S";
