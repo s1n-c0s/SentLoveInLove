@@ -45,7 +45,7 @@ public class Person : MonoBehaviour
         }
         else
         {
-            // _personAnimationCtr.SetAnimation("GirlIdle");
+            _personAnimationCtr.SetAnimation("GirlDrop");
         }
     }
 
