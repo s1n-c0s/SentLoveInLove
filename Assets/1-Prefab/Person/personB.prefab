@@ -15,6 +15,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7084180893931022771, guid: 349da6a757ffb1540bdef2073d812dbc,
         type: 3}
+      propertyPath: _personAnimationCtr
+      value: 
+      objectReference: {fileID: 2185001060664918955}
+    - target: {fileID: -7084180893931022771, guid: 349da6a757ffb1540bdef2073d812dbc,
+        type: 3}
       propertyPath: _playerVisuals.Array.data[0]
       value: 
       objectReference: {fileID: 1636586429971292535}
@@ -149,3 +154,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3936921015004164592}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2185001060664918955 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2949978902574871131, guid: 349da6a757ffb1540bdef2073d812dbc,
+    type: 3}
+  m_PrefabInstance: {fileID: 3936921015004164592}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636586429971292535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4947b44727a35324e92ed186f7ef268b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

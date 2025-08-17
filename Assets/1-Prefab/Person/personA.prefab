@@ -111,6 +111,7 @@ MonoBehaviour:
   - {fileID: 2311633458666803335}
   isPersonA: 1
   _packageManager: {fileID: -5533802584271330167}
+  _personAnimationCtr: {fileID: 1279140868324479436}
 --- !u!114 &-5533802584271330167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +348,7 @@ GameObject:
   - component: {fileID: 740194292036290400}
   - component: {fileID: 1716795822529054187}
   - component: {fileID: 949294001023950569}
+  - component: {fileID: 1279140868324479436}
   - component: {fileID: 8201103094559709306}
   - component: {fileID: 8372479285071531706}
   m_Layer: 0
@@ -467,6 +469,18 @@ MonoBehaviour:
     m_Extent: {x: 0.601928, y: 1.15362, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!114 &1279140868324479436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3364405156627802871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4947b44727a35324e92ed186f7ef268b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &8201103094559709306
 Animator:
   serializedVersion: 5
