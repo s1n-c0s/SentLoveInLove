@@ -8,7 +8,6 @@ public class Person : MonoBehaviour
     [SerializeField] private bool isPersonA;
     private int _selectedCharacterIndex;
     [SerializeField] private PackageManager _packageManager;
-    [SerializeField] private PersonAnimationCtr _personAnimationCtr;
     private Node _currentNode;
 
     private void Awake()
@@ -34,18 +33,6 @@ public class Person : MonoBehaviour
         if (_playerVisuals.Count > 0)
         {
             SetVisuals(_playerVisuals[_selectedCharacterIndex]);
-        }
-    }
-
-    void Start()
-    {
-        if (isPersonA)
-        {
-            _personAnimationCtr.SetAnimation("BoyDrop");
-        }
-        else
-        {
-            _personAnimationCtr.SetAnimation("GirlDrop");
         }
     }
 

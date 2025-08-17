@@ -12,6 +12,11 @@ public class PersonAnimationCtr : MonoBehaviour
     void Awake()
     {
         _animator = GetComponent<Animator>();
+        if (_animator != null)
+        {
+            SetAnimation("BoyDrop");
+            SetAnimation("GirlDrop");
+        }
     }
 
     public void SetAnimation(string animationName)
