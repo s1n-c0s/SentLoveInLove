@@ -8,6 +8,7 @@ public class Person : MonoBehaviour
     [SerializeField] private bool isPersonA;
     private int _selectedCharacterIndex;
     [SerializeField] private PackageManager _packageManager;
+    [SerializeField] private PersonAnimationCtr _personAnimationCtr;
     private Node _currentNode;
 
     private void Awake()
@@ -36,6 +37,18 @@ public class Person : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        if (isPersonA)
+        {
+            _personAnimationCtr.SetAnimation("BoyDrop");
+        }
+        else
+        {
+            // _personAnimationCtr.SetAnimation("GirlIdle");
+        }
+    }
+
     private void SetVisuals(GameObject gameObject)
     {
         foreach (var visual in _playerVisuals)
@@ -45,7 +58,7 @@ public class Person : MonoBehaviour
 
         gameObject.SetActive(true);
     }
-    
+
     public void rotateLookatTogether()
     {
         GameObject otherPerson = null;
@@ -62,7 +75,7 @@ public class Person : MonoBehaviour
         {
             Vector3 centerPoint = (transform.position + otherPerson.transform.position) / 2f;
             SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-            Debug.Log(sr== null ? "SpriteRenderer is null" : "SpriteRenderer found");
+            Debug.Log(sr == null ? "SpriteRenderer is null" : "SpriteRenderer found");
             if (sr != null)
             {
                 sr.flipX = transform.position.x > centerPoint.x;
